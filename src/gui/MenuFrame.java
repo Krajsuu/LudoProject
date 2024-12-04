@@ -14,11 +14,10 @@ public class MenuFrame extends JFrame{
         setTitle("Ludo Game Menu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(JPanel1);
-        pack();
-
-        ImageIcon icon = new ImageIcon(getClass().getResource("LudoGameIcon.png"));
-        ImageIcon LudoGameIcon = new ImageIcon(icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
+        ImageIcon icon = new ImageIcon("data/images/LudoGameIcon.png");
+        ImageIcon LudoGameIcon = new ImageIcon(icon.getImage().getScaledInstance(330, 110, Image.SCALE_SMOOTH));
         LabelLudoGame.setIcon(LudoGameIcon);
+        pack();
     }
 
 }

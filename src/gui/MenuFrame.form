@@ -34,7 +34,7 @@
         <properties>
           <font name="Arial Black" size="22" style="1"/>
           <foreground color="-1719021"/>
-          <text value="LUDO GAME"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="6419d" class="javax.swing.JLabel" binding="LabelWelome">
