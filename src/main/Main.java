@@ -1,13 +1,13 @@
 package main;
 
 import javax.swing.*;
-import gui.MenuFrame;
+import gui.MenuPanel;
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
+        /*SwingUtilities.invokeLater(() -> {
             // Uruchamianie MenuFrame
-            MenuFrame menuFrame = new MenuFrame();
-            menuFrame.setVisible(true);
-        });
+            MenuPanel menuPanel = new MenuPanel();
+            menuPanel.setVisible(true);
+        });*/
     }
 }
