@@ -18,5 +18,12 @@ public class MainFrame extends JFrame {
 
         mainPanel.add(new MenuPanel(this),"Menu");
         mainPanel.add(new LoadGamePanel(this),"LoadGame");
+        mainPanel.add(new NewGamePanel(this),"NewGame");
+
+        setContentPane(mainPanel);
+    }
+
+    public void showPanel(String panelName){
+        cardLayout.show(mainPanel, panelName);
     }
 }

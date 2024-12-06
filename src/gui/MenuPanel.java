@@ -11,7 +11,8 @@ public class MenuPanel extends JPanel{
     private JButton loadGameButton;
     private JButton buttonNewGame;
 
-    private void prepareUI() {
+
+    public MenuPanel(MainFrame frame) {
         ImageIcon icon = new ImageIcon("data/images/LudoGameIcon.png");
         ImageIcon LudoGameIcon = new ImageIcon(icon.getImage().getScaledInstance(330, 110, Image.SCALE_SMOOTH));
         LabelLudoGame.setIcon(LudoGameIcon);
@@ -29,15 +30,25 @@ public class MenuPanel extends JPanel{
             }
         });
 
+        loadGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getActionCommand().equals("loadGame")) {
+                    frame.showPanel("LoadGame");
+                }
+            }
+        });
 
-    }
+        buttonNewGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getActionCommand().equals("newGame")) {
+                    frame.showPanel("NewGame");
+                }
+            }
+        });
 
 
-
-    public MenuPanel(MainFrame frame) {
-
-
-        prepareUI();
     }
 
 
