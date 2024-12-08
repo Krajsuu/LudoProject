@@ -1,5 +1,5 @@
 package model;
-
+/*
 public class Game {
     private Field field;
     private Player[] players;
@@ -85,3 +85,4 @@ public class Game {
         return true;
     }
 }
+*/

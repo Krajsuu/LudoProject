@@ -1,13 +1,17 @@
 package main;
 
 import javax.swing.*;
-import gui.MenuPanel;
+
+import gui.MenuFrame;
+
+import java.awt.*;
+
 public class Main {
     public static void main(String[] args) {
-        /*SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             // Uruchamianie MenuFrame
-            MenuPanel menuPanel = new MenuPanel();
-            menuPanel.setVisible(true);
-        });*/
+            MenuFrame menuFrame = new MenuFrame();
+            menuFrame.setVisible(true);
+        });
     }
 }

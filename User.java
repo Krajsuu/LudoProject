@@ -1,4 +1,4 @@
-package game; // Pakiet gry (zmień zgodnie ze strukturą projektu)
+package model; // Pakiet gry (zmień zgodnie ze strukturą projektu)
 
 /**
  * Klasa reprezentująca użytkownika w grze. Obsługuje takie elementy, jak:

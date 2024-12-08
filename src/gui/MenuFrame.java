@@ -3,7 +3,8 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-public class MenuPanel extends JPanel{
+
+public class MenuFrame extends JFrame{
     private JPanel JPanel1;
     private JLabel LabelLudoGame;
     private JLabel LabelWelome;
@@ -11,11 +12,17 @@ public class MenuPanel extends JPanel{
     private JButton loadGameButton;
     private JButton buttonNewGame;
 
+    private JPanel originalPanel;
 
-    public MenuPanel(MainFrame frame) {
+    public MenuFrame() {
+        setTitle("Ludo Game");
         ImageIcon icon = new ImageIcon("data/images/LudoGameIcon.png");
         ImageIcon LudoGameIcon = new ImageIcon(icon.getImage().getScaledInstance(330, 110, Image.SCALE_SMOOTH));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        originalPanel = JPanel1;
+        setContentPane(JPanel1);
         LabelLudoGame.setIcon(LudoGameIcon);
+
 
         exitButton.setActionCommand("exit");
         loadGameButton.setActionCommand("loadGame");
@@ -34,7 +41,9 @@ public class MenuPanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals("loadGame")) {
-                    frame.showPanel("LoadGame");
+                    LoadGameFrame loadGameFrame = new LoadGameFrame(MenuFrame.this);
+                    setContentPane(loadGameFrame.getMainPanel());
+                    revalidate();
                 }
             }
         });
@@ -43,12 +52,19 @@ public class MenuPanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals("newGame")) {
-                    frame.showPanel("NewGame");
+                    NewGameFrame newGameFrame = new NewGameFrame(MenuFrame.this);
+                    setContentPane(newGameFrame.getMainPanel());
+                    revalidate();
                 }
             }
         });
 
+        pack();
 
+    }
+
+    public JPanel getOriginalPanel(){
+        return originalPanel;
     }
 
 

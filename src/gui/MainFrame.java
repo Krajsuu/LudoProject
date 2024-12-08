@@ -7,6 +7,8 @@ public class MainFrame extends JFrame {
     private CardLayout cardLayout;
     private JPanel mainPanel;
 
+
+
     public MainFrame(){
         setTitle("Ludo Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -16,11 +18,9 @@ public class MainFrame extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        mainPanel.add(new MenuPanel(this),"Menu");
-        mainPanel.add(new LoadGamePanel(this),"LoadGame");
-        mainPanel.add(new NewGamePanel(this),"NewGame");
 
         setContentPane(mainPanel);
+        showPanel("Menu");
     }
 
     public void showPanel(String panelName){
