@@ -125,6 +125,16 @@ public class NewGameFrame{
             parentFrame.revalidate();
             parentFrame.repaint();
         });
+
+        startGameButton.addActionListener(e -> {
+
+            GamePanel gamePanel = new GamePanel();
+
+            parentFrame.setContentPane(gamePanel.GamePanel);
+
+            parentFrame.revalidate();
+            parentFrame.repaint();
+        });
     }
 
     public JPanel getMainPanel(){
