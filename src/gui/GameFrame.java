@@ -12,10 +12,13 @@ public class GameFrame {
     private JButton SaveButton;
     private JButton quitButton;
     private JButton button1;
+    //private JPanel[] playersBaners; // 4 banery graczy
 
-    public GameFrame() {
-        createUIComponents();
-    }
+
+
+
+
+
 
     private void createUIComponents() {
         // Główny panel planszy
@@ -125,6 +128,13 @@ public class GameFrame {
         }
         boardPanel.add(mainBoardPanel, BorderLayout.CENTER);
     }
+
+
+
+    public GameFrame() {
+        createUIComponents();
+    }
+
 
     public static void main(String[] args) {
         GameFrame gameFrame = new GameFrame();
