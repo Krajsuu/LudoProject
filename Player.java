@@ -30,6 +30,10 @@ public class Player extends User {
 
     // Gettery i Settery
 
+    public void grantExtraRoll() {
+    // Logika przyznania dodatkowego rzutu gdy skujemy przeciwnika
+}
+
     public String getColor() {
         return color;   // Zwraca kolor pionków gracza
     }
