@@ -57,6 +57,9 @@ public class Bot extends Player {
             pawnToMove.move(steps, board);
         }
     }
-
+    @Override
+    public String getUserType() {
+        return "Bot";
+    }
 
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends User {
-    private SwingColor color;
+
     private List<Pawn> pawnsAtBase; //pionki w bazie
     private List<Pawn> pawnsInGame; //Pionki na planszy
     private List<Pawn> pawnsAtHome; // pionki w domku
@@ -17,9 +17,8 @@ public class Player extends User {
     private boolean hasTurn;
 
     //konstruktor
-    public Player(String username,SwingColor color) {
-        super(username);
-        this.color = color;
+    public Player(String username,Color color) {
+        super(username, color);
         this.pawnsAtBase = new ArrayList<>();
         this.pawnsInGame = new ArrayList<>();
         this.pawnsAtHome = new ArrayList<>();
@@ -27,12 +26,13 @@ public class Player extends User {
         this.currentPawn = null;
     }
 
+    /*
     public SwingColor getColor() {
         return color;
     }
     public void setColor(SwingColor color) {
         this.color = color;
-    }
+    }*/
     //dodanie pionka do domku gracza
     public void addPawnToHome(Pawn pawn) {
         pawnsAtBase.add(pawn);
@@ -100,5 +100,8 @@ public class Player extends User {
     }
     public void useExtraRoll() {
         this.hasExtraRoll = false;
+    }
+    public String getUserType() {
+        return "Player";
     }
 }
