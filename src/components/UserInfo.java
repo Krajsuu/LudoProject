@@ -11,21 +11,21 @@ public class UserInfo extends JPanel{
     private JLabel playerIcon;
 
 
-    private static final Font nicknameFont = new Font("Arial", Font.BOLD, 20);
-
+    private final Font nicknameFont = new Font("Arial", Font.BOLD, 20);
+    private final int iconSize = 50;
     public UserInfo(User user){
         playerNickname = new JLabel(user.getUsername());
         playerColor = user.getColor();
         playerIcon = new JLabel();
         ImageIcon icon = new ImageIcon("data/images/playerImages/playerBlue.png");
-        ImageIcon scaledIcon = new ImageIcon(icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+        ImageIcon scaledIcon = new ImageIcon(icon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
         playerIcon.setIcon(scaledIcon);
         playerIcon.setBackground(playerColor);
         playerIcon.setOpaque(true);
         playerIcon.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        playerIcon.setPreferredSize(new Dimension(30, 30));
-        playerIcon.setMaximumSize(new Dimension(30, 30));
-        playerIcon.setMinimumSize(new Dimension(30, 30));
+        playerIcon.setPreferredSize(new Dimension(iconSize, iconSize));
+        playerIcon.setMaximumSize(new Dimension(iconSize, iconSize));
+        playerIcon.setMinimumSize(new Dimension(iconSize, iconSize));
         playerIcon.setSize(30, 30);
         playerIcon.setVisible(true);
         playerNickname.setFont(nicknameFont);

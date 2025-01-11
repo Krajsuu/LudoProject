@@ -2,8 +2,11 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
-
-public class GameFrame {
+import model.User;
+import components.UserInfo;
+import interfaces.PanelsInterface;
+import java.util.ArrayList;
+public class GameFrame implements PanelsInterface {
     private JPanel mainPanel;
     private JPanel playersPanel;
     private JPanel buttonsPanel;
@@ -11,10 +14,12 @@ public class GameFrame {
     private JPanel dicePanel;
     private JButton SaveButton;
     private JButton quitButton;
-    private JButton button1;
+    private JButton diceButton;
+
+    private JFrame parentFrame;
     //private JPanel[] playersBaners; // 4 banery graczy
 
-
+    private ArrayList<User> users = new ArrayList<User>();
 
 
 
@@ -129,20 +134,23 @@ public class GameFrame {
         boardPanel.add(mainBoardPanel, BorderLayout.CENTER);
     }
 
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
 
 
-    public GameFrame() {
+    public GameFrame(JFrame parentFrame, ArrayList<User> users) {
+        this.parentFrame = parentFrame;
+        this.users = users;
         createUIComponents();
+        parentFrame.setSize(1080,680 );
+        playersPanel.setLayout(new GridLayout(users.size(),1,5,5));
+        for(int i = 0; i < users.size(); i++){
+            playersPanel.add(new JPanel().add(new UserInfo(users.get(i))));
+        }
+        diceButton.setText("");
+        diceButton.setIcon(new ImageIcon(new ImageIcon("data/images/diceImages/1.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
     }
 
 
-    public static void main(String[] args) {
-        GameFrame gameFrame = new GameFrame();
-        JFrame frame = new JFrame("Ludo Game");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setContentPane(gameFrame.mainPanel);
-        frame.pack();
-        frame.setVisible(true);
-
-    }
 }

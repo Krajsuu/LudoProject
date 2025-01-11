@@ -23,7 +23,7 @@ public class MenuFrame extends JFrame{
         setContentPane(JPanel1);
         LabelLudoGame.setIcon(LudoGameIcon);
 
-
+        setResizable(false);
         exitButton.setActionCommand("exit");
         loadGameButton.setActionCommand("loadGame");
         buttonNewGame.setActionCommand("newGame");

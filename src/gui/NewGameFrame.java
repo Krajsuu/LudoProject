@@ -6,17 +6,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-
-
+import interfaces.PanelsInterface;
+import model.User;
+import model.Player;
+import model.Bot;
+import utils.SwingColor;
+import java.util.ArrayList;
 /**
  * Klasa NewGameFrame odpowiada za wyświetlenie okna do rozpoczęcia nowej gry.
  * Umożliwia wybór liczby graczy oraz ich nazw.
  */
-public class NewGameFrame{
+public class NewGameFrame implements PanelsInterface {
     /**
      * Klasa HintText dziedzicząca po JTextField, która dodaje podpowiedź do pola tekstowego.
      */
-    private class HintText extends JTextField{
+    private class HintText extends JTextField {
         // Deklaracja zmiennych
         private final String hint; // Podpowiedź
         private boolean showingHint; // Czy podpowiedź jest wyświetlana
@@ -27,7 +31,7 @@ public class NewGameFrame{
          *
          * @param hint Podpowiedź
          */
-        public HintText(final String hint){
+        public HintText(final String hint) {
             super(hint); // Wywołanie konstruktora klasy nadrzędnej
             this.hint = hint; // Przypisanie podpowiedzi
             this.showingHint = true; // Ustawienie, że podpowiedź jest wyświetlana
@@ -43,7 +47,7 @@ public class NewGameFrame{
             this.addFocusListener(new FocusListener() {
                 @Override
                 public void focusGained(FocusEvent e) {
-                    if(getText().isEmpty()){
+                    if (getText().isEmpty()) {
                         setText("");
                         setForeground(Color.BLACK);
                         showingHint = false;
@@ -52,7 +56,7 @@ public class NewGameFrame{
 
                 @Override
                 public void focusLost(FocusEvent e) {
-                    if(getText().isEmpty()){
+                    if (getText().isEmpty()) {
                         setText(hint);
                         setForeground(Color.GRAY);
                         showingHint = true;
@@ -68,7 +72,7 @@ public class NewGameFrame{
          * @return tekst z pola tekstowego lub pusty ciąg znaków
          */
         @Override
-        public String getText(){
+        public String getText() {
             return showingHint ? "" : super.getText();
         }
     }
@@ -83,7 +87,9 @@ public class NewGameFrame{
     private JButton backButton; // Przycisk powrotu
     private JButton startGameButton;
     private JTextField ddddTextField;
-
+    private ArrayList<User> users = new ArrayList<User>();
+    // Tablica z graczami
+    private int amountOfPlayers = 0; // Liczba graczy
     private JFrame parentFrame; // Okno nadrzędne
 
     /**
@@ -91,7 +97,7 @@ public class NewGameFrame{
      *
      * @param parentFrame Okno nadrzędne
      */
-    public NewGameFrame(JFrame parentFrame){
+    public NewGameFrame(JFrame parentFrame) {
         this.parentFrame = parentFrame; // Przypisanie okna nadrzędnego
 
         /**
@@ -99,8 +105,8 @@ public class NewGameFrame{
          * Po kliknięciu przycisku zostanie pobrana liczba graczy oraz ich nazwy.
          * Następnie zostanie utworzona nowa gra z podanymi parametrami.
          */
-        HumanPlayerComboBox.setModel(new DefaultComboBoxModel(new String[] { "0" , "1", "2", "3", "4" }));
-        BotPlayerComboBox.setModel(new DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4" }));
+        HumanPlayerComboBox.setModel(new DefaultComboBoxModel(new String[]{"0", "1", "2", "3", "4"}));
+        BotPlayerComboBox.setModel(new DefaultComboBoxModel(new String[]{"0", "1", "2", "3", "4"}));
 
 
         HumanPlayerComboBox.addActionListener(new ActionListener() {
@@ -126,64 +132,99 @@ public class NewGameFrame{
             parentFrame.repaint();
         });
 
-        startGameButton.addActionListener(e -> {
+        startGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameFrame gameFrame = new GameFrame(parentFrame, users);
+                parentFrame.setContentPane(gameFrame.getMainPanel());
+                parentFrame.revalidate();
 
-            GamePanel gamePanel = new GamePanel();
-
-            parentFrame.setContentPane(gamePanel.GamePanel);
-
-            parentFrame.revalidate();
-            parentFrame.repaint();
+            }
         });
     }
 
-    public JPanel getMainPanel(){
+    public JPanel getMainPanel() {
         return NewGamePanel;
     }
 
     /**
      * Metoda updatePlayersFields aktualizuje pola tekstowe z nazwami graczy w zależności od wybranej liczby graczy.
      */
-    private void updatePlayersFields(){
-        playersPanel.removeAll(); // Usunięcie poprzednich pól tekstowych
-        playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.Y_AXIS)); // Ustawienie nowego układu siatki
+    private void updatePlayersFields() {
+        playersPanel.removeAll(); // Usunięcie poprzednich pól
+        playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.Y_AXIS)); // Ustawienie układu
+
+        users.clear(); // Czyścimy listę użytkowników, aby uniknąć nadpisywania
+
         int humanPlayers = Integer.parseInt((String) HumanPlayerComboBox.getSelectedItem());
         int botPlayers = Integer.parseInt((String) BotPlayerComboBox.getSelectedItem());
-        // Sprawdzenie, czy suma graczy nie przekracza 4
-        if(humanPlayers + botPlayers > 4){
-            JOptionPane.showMessageDialog(null, "Za dużo graczy", "Błąd", JOptionPane.ERROR_MESSAGE); // Wyświetlenie komunikatu o błędzie
+
+        // Sprawdzenie, czy suma graczy nie przekracza limitu
+        if (humanPlayers + botPlayers > 4) {
+            JOptionPane.showMessageDialog(null, "Za dużo graczy", "Błąd", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        // Dodanie pól tekstowych do wprowadzenia nazw graczy
-        for(int i = 0; i < humanPlayers; i++){
-            JLabel Humanlabel = new JLabel("Gracz " + (i + 1) + "(Człowiek): ");
-            HintText HumantextField = new HintText("Podaj nazwę dla Gracza " + (i + 1));
-            HumantextField.setName("humanPlayer" + (i+1));
-            HumantextField.setText("Podaj nazwę dla Gracza " + (i + 1));
 
-            JPanel HumanPanel = new JPanel();
-            HumanPanel.setLayout(new BoxLayout(HumanPanel, BoxLayout.Y_AXIS));
-            HumanPanel.add(Humanlabel);
-            HumanPanel.add(HumantextField);
+        // Dodanie graczy-ludzi
+        for (int i = 0; i < humanPlayers; i++) {
+            JLabel humanLabel = new JLabel("Gracz " + (i + 1) + " (Człowiek): ");
+            HintText humanTextField = new HintText("Podaj nazwę dla Gracza " + (i + 1));
 
-            playersPanel.add(HumanPanel);
+            JPanel humanPanel = new JPanel();
+            humanPanel.setLayout(new BoxLayout(humanPanel, BoxLayout.Y_AXIS));
+            humanPanel.add(humanLabel);
+            humanPanel.add(humanTextField);
+
+            // Tworzenie obiektu Player i dodanie do listy
+            Player player = new Player("Gracz " + (i + 1), SwingColor.playerColor(amountOfPlayers++));
+            users.add(player);
+
+            // Listener do aktualizacji nazwy gracza
+            humanTextField.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    player.setUsername(humanTextField.getText());
+                }
+            });
+
+            playersPanel.add(humanPanel);
         }
-        // Dodanie pól tekstowych do wprowadzenia nazw botów
-        for(int i = 0; i < botPlayers; i++){
-            JLabel Botlabel = new JLabel("Gracz " + (i + 1) + "(Bot): ");
-            HintText BottextField = new HintText("Podaj nazwę dla Bota " + (i + 1));
-            BottextField.setName("botPlayer" + (i+1));
-            BottextField.setText("Podaj nazwę dla Bota " + (i + 1));
 
-            JPanel BotPanel = new JPanel();
-            BotPanel.setLayout(new BoxLayout(BotPanel, BoxLayout.Y_AXIS));
-            BotPanel.add(Botlabel);
-            BotPanel.add(BottextField);
+        // Dodanie graczy-botów
+        for (int i = 0; i < botPlayers; i++) {
+            JLabel botLabel = new JLabel("Gracz " + (humanPlayers + i + 1) + " (Bot): ");
+            HintText botTextField = new HintText("Podaj nazwę dla Bota " + (i + 1));
 
-            playersPanel.add(BotPanel);
+            JPanel botPanel = new JPanel();
+            botPanel.setLayout(new BoxLayout(botPanel, BoxLayout.Y_AXIS));
+            botPanel.add(botLabel);
+            botPanel.add(botTextField);
+
+            // Tworzenie obiektu Bot i dodanie do listy
+            Bot bot = new Bot("Bot " + (i + 1), SwingColor.playerColor(amountOfPlayers++));
+            users.add(bot);
+
+            // Listener do aktualizacji nazwy bota
+            botTextField.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    bot.setUsername(botTextField.getText());
+                }
+            });
+
+            playersPanel.add(botPanel);
         }
-        // Aktualizacja panelu z graczami
+
         playersPanel.revalidate();
         playersPanel.repaint();
     }
 }
+

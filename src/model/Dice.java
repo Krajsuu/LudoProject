@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Dice {
     private int randomValue;
-    private String ImagePath = "data/images/diceImages/";
+    private final String ImagePath = "data/images/diceImages/";
 
     public Dice() {
         this.randomValue = 0;

@@ -11,7 +11,7 @@ public class Bot extends Player {
     private Random random; // Generator losowych liczb
 
     // Konstruktor inicjalizujący bota
-    public Bot(String username, SwingColor color) {
+    public Bot(String username, Color color) {
         super(username, color);
         this.random = new Random();
     }

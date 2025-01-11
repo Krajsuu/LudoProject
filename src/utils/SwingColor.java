@@ -1,6 +1,7 @@
 package utils;
 
 import java.awt.Color;
+import java.util.Objects;
 
 public enum SwingColor {
     RED(Color.RED),
@@ -21,8 +22,23 @@ public enum SwingColor {
         this.color = color;
     }
 
-    public Color getColor() {
-        return color;
+
+
+    public static Color playerColor(int i){
+        switch(i){
+            case 0:
+                return Color.red;
+            case 1:
+                return Color.blue;
+            case 2:
+                return Color.green;
+            case 3:
+                return Color.yellow;
+            default:
+                return Color.black;
+
+
+        }
     }
 
 }
