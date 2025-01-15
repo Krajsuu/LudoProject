@@ -1,88 +1,116 @@
 package model;
-/*
+
+import javax.swing.*;
+import java.awt.Point;
+import java.awt.*;
+import java.util.ArrayList;
+
+
 public class Game {
-    private Field field;
-    private Player[] players;
-    private int currentPlayerIndex;
-    private int diceRoll;
-    private boolean diceRolled;
+    private ArrayList<Player> players;
+    private Dice dice;
+    private ArrayList<Pawn> redPawns;
+    private ArrayList<Pawn> bluePawns;
+    private ArrayList<Pawn> yellowPawns;
+    private ArrayList<Pawn> greenPawns;
 
-    public Game() {
-        this.field = new Field();
-        this.players = new Player[4];
-        for (int i = 0; i < 4; i++) {
-            this.players[i] = new Bot(i);
+    private void initializeGame(){
+
+        for(Player player : players){
+            if(player.getColor() == Color.RED){
+                Pawn redPawn1 = new Pawn(player,new Point(1,1),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnRed.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                redPawns.add(redPawn1);
+                Pawn redPawn2 = new Pawn(player,new Point(2,1),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnRed.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                redPawns.add(redPawn2);
+                Pawn redPawn3 = new Pawn(player,new Point(1,2),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnRed.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                redPawns.add(redPawn3);
+                Pawn redPawn4 = new Pawn(player,new Point(2,2),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnRed.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                redPawns.add(redPawn4);
+                for(Pawn pawn : redPawns){
+                    player.addPawnToHome(pawn);
+                }
+            }
+            else if(player.getColor() == Color.BLUE){
+                Pawn bluepawn1 = new Pawn(player,new Point(10,1),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnBlue.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                bluePawns.add(bluepawn1);
+                Pawn bluepawn2 = new Pawn(player,new Point(11,1),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnBlue.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                bluePawns.add(bluepawn2);
+                Pawn bluepawn3 = new Pawn(player,new Point(10,2),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnBlue.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                bluePawns.add(bluepawn3);
+                Pawn bluepawn4 = new Pawn(player,new Point(11,2),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnBlue.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                bluePawns.add(bluepawn4);
+                for(Pawn pawn : bluePawns){
+                    player.addPawnToHome(pawn);
+                }
+            }
+            else if(player.getColor() == Color.YELLOW){
+                Pawn yellowpawn1 = new Pawn(player,new Point(10,10),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnYellow.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                yellowPawns.add(yellowpawn1);
+                Pawn yellowpawn2 = new Pawn(player,new Point(11,11),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnYellow.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                yellowPawns.add(yellowpawn2);
+                Pawn yellowpawn3 = new Pawn(player,new Point(10,11),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnYellow.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                yellowPawns.add(yellowpawn3);
+                Pawn yellowpawn4 = new Pawn(player,new Point(11,10),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnYellow.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                yellowPawns.add(yellowpawn4);
+                for(Pawn pawn : yellowPawns){
+                    player.addPawnToHome(pawn);
+                }
+            }
+            else if(player.getColor() == Color.GREEN){
+                Pawn greenpawn1 = new Pawn(player,new Point(10,1),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnGreen.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                greenPawns.add(greenpawn1);
+                Pawn greenpawn2 = new Pawn(player,new Point(11,1),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnGreen.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                greenPawns.add(greenpawn2);
+                Pawn greenpawn3 = new Pawn(player,new Point(10,2),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnGreen.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                greenPawns.add(greenpawn3);
+                Pawn greenpawn4 = new Pawn(player,new Point(11,2),new Point(7,6),new ImageIcon(new ImageIcon("data/images/pawnsImages/pawnGreen.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+                greenPawns.add(greenpawn4);
+                for(Pawn pawn : greenPawns){
+                    player.addPawnToHome(pawn);
+                }
+            }
+
+
         }
-        this.currentPlayerIndex = 0;
-        this.diceRoll = 0;
-        this.diceRolled = false;
+
+
+    }
+    public Game(ArrayList<User> users) {
+        this.players = new ArrayList<>();
+        this.dice = new Dice();
+        this.redPawns = new ArrayList<>();
+        this.bluePawns = new ArrayList<>();
+        this.yellowPawns = new ArrayList<>();
+        this.greenPawns = new ArrayList<>();
+
+        for (User user : users) {
+            Player player = new Player(user.getUsername(), user.getColor());
+            players.add(player);
+        }
+
+        initializeGame();
     }
 
-    public Game(int players, int bots){
-        this.field = new Field();
-        this.players = new Player[players+bots];
-        for (int i = 0; i < players; i++) {
-            this.players[i] = new Player(i);
-        }
-        for (int i = players; i < players+bots; i++) {
-            this.players[i] = new Bot(i);
-        }
-        this.currentPlayerIndex = 0;
-        this.diceRoll = 0;
-        this.diceRolled = false;
+    public ArrayList<Pawn> getRedPawns(){
+        return redPawns;
     }
-
-    public Field getField() {
-        return field;
+    public ArrayList<Pawn> getBluePawns(){
+        return bluePawns;
     }
-
-    public Player[] getPlayers() {
+    public ArrayList<Pawn> getYellowPawns(){
+        return yellowPawns;
+    }
+    public ArrayList<Pawn> getGreenPawns(){
+        return greenPawns;
+    }
+    public ArrayList<Player> getPlayers(){
         return players;
     }
 
-    public int getCurrentPlayerIndex() {
-        return currentPlayerIndex;
+    public int rollDice(){
+        return dice.roll();
     }
 
-    public int getDiceRoll() {
-        return diceRoll;
-    }
 
-    public boolean isDiceRolled() {
-        return diceRolled;
-    }
 
-    public void rollDice() {
-        diceRoll = (int) (Math.random() * 6) + 1;
-        diceRolled = true;
-    }
-
-    public void nextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % 4;
-        diceRoll = 0;
-        diceRolled = false;
-    }
-
-    public void movePawn(int pawnIndex) {
-        Pawn pawn = players[currentPlayerIndex].getPawns()[pawnIndex];
-        if (pawn.isAtHome() && diceRoll == 6) {
-            field.movePawn(pawn, currentPlayerIndex * 13);
-        } else if (!pawn.isAtHome() && !pawn.isFinished()) {
-            int newPosition = (pawn.getPosition() + diceRoll) % 52;
-            field.movePawn(pawn, newPosition);
-        }
-        if (diceRoll != 6) {
-            nextPlayer();
-        }
-    }
-
-    public boolean isGameFinished() {
-        for (Player player : players) {
-            if (!player.isFinished()) {
-                return false;
-            }
-        }
-        return true;
-    }
 }
-*/

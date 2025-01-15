@@ -6,23 +6,24 @@ import model.User;
 import components.UserInfo;
 import interfaces.PanelsInterface;
 import java.util.ArrayList;
+import model.*;
+
 public class GameFrame implements PanelsInterface {
     private JPanel mainPanel;
     private JPanel playersPanel;
     private JPanel buttonsPanel;
     private JPanel boardPanel;
     private JPanel dicePanel;
+    private int diceValue;
     private JButton SaveButton;
     private JButton quitButton;
     private JButton diceButton;
+    private Game game;
 
     private JFrame parentFrame;
     //private JPanel[] playersBaners; // 4 banery graczy
 
     private ArrayList<User> users = new ArrayList<User>();
-
-
-
 
 
     private void createUIComponents() {
@@ -41,7 +42,7 @@ public class GameFrame implements PanelsInterface {
                 field.setHorizontalAlignment(SwingConstants.CENTER);
                 field.setVerticalAlignment(SwingConstants.CENTER);
                 field.setOpaque(true); // Umożliwia ustawienie koloru
-
+                //kolorowanko
                 switch (row){
                     case 0:
                     case 12:{
@@ -142,7 +143,10 @@ public class GameFrame implements PanelsInterface {
     public GameFrame(JFrame parentFrame, ArrayList<User> users) {
         this.parentFrame = parentFrame;
         this.users = users;
+        //gra
+        this.game = new Game(users);
         createUIComponents();
+        createPawnGridOverlay();
         parentFrame.setSize(1080,680 );
         playersPanel.setLayout(new GridLayout(users.size(),1,5,5));
         for(int i = 0; i < users.size(); i++){
@@ -150,7 +154,74 @@ public class GameFrame implements PanelsInterface {
         }
         diceButton.setText("");
         diceButton.setIcon(new ImageIcon(new ImageIcon("data/images/diceImages/1.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+
+        //losowanie kostka diceValue
+        diceButton.addActionListener(e -> {
+            this.diceValue = game.rollDice();
+
+            if(diceValue < 1 || diceValue > 6){
+                System.err.println("Invalid dice value " + diceValue);
+                return;
+            }
+
+            String imagePath = "data/images/diceImages/" + diceValue + ".png";
+            diceButton.setIcon(new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
+        });
     }
 
+    private void createPawnGridOverlay() {
+        if (game == null) {
+            System.err.println("Game is not initialized.");
+            return;
+        }
+
+
+        JPanel overlayPanel = new JPanel();
+        overlayPanel.setLayout(new GridLayout(13, 13));
+        overlayPanel.setOpaque(false);
+
+
+        JLabel[][] overlayFields = new JLabel[13][13];
+        for (int row = 0; row < 13; row++) {
+            for (int col = 0; col < 13; col++) {
+                JLabel field = new JLabel();
+                field.setHorizontalAlignment(SwingConstants.CENTER);
+                field.setVerticalAlignment(SwingConstants.CENTER);
+                field.setOpaque(false);
+                overlayFields[row][col] = field;
+                overlayPanel.add(field);
+            }
+        }
+
+        // Umiesc pionki na planszy
+        for (Player player : game.getPlayers()) {
+            ArrayList<Pawn> pawns = new ArrayList<>();
+            if (player.getColor() == Color.RED) {
+                pawns = game.getRedPawns();
+            } else if (player.getColor() == Color.BLUE) {
+                pawns = game.getBluePawns();
+            } else if (player.getColor() == Color.YELLOW) {
+                pawns = game.getYellowPawns();
+            } else if (player.getColor() == Color.GREEN) {
+                pawns = game.getGreenPawns();
+            }
+
+            for (Pawn pawn : pawns) {
+                Point position = pawn.getCurrentPosition();
+                if (position.x >= 0 && position.x < 13 && position.y >= 0 && position.y < 13) {
+                    overlayFields[position.x][position.y].setIcon(pawn.getPawnIcon());
+                } else {
+                    System.err.println("Pawn position out of bounds: " + position);
+                }
+            }
+        }
+
+
+        boardPanel.add(overlayPanel, BorderLayout.CENTER);
+
+
+        boardPanel.revalidate();
+        boardPanel.repaint();
+    }
 
 }
