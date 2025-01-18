@@ -1,23 +1,21 @@
 package model;
 
-
-import utils.SwingColor;
-
-import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.Color;
 
-public class Player extends User {
+public class Player extends User implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    private List<Pawn> pawnsAtBase; //pionki w bazie
-    private List<Pawn> pawnsInGame; //Pionki na planszy
+    private List<Pawn> pawnsAtBase; // pionki w bazie
+    private List<Pawn> pawnsInGame; // Pionki na planszy
     private List<Pawn> pawnsAtHome; // pionki w domku
-    private Pawn currentPawn;  // obecny pionek w grze
+    private transient Pawn currentPawn; // obecny pionek w grze (transient, bo może być null)
     private boolean hasExtraRoll;
     private boolean hasTurn;
 
-    //konstruktor
-    public Player(String username,Color color) {
+    public Player(String username, Color color) {
         super(username, color);
         this.pawnsAtBase = new ArrayList<>();
         this.pawnsInGame = new ArrayList<>();
@@ -26,45 +24,58 @@ public class Player extends User {
         this.currentPawn = null;
     }
 
-    /*
-    public SwingColor getColor() {
-        return color;
+    // Konstruktor bezargumentowy wymagany do deserializacji
+    public Player() {
+        super("", Color.BLACK); // Domyślne wartości
+        this.pawnsAtBase = new ArrayList<>();
+        this.pawnsInGame = new ArrayList<>();
+        this.pawnsAtHome = new ArrayList<>();
+        this.hasExtraRoll = false;
+        this.currentPawn = null;
     }
-    public void setColor(SwingColor color) {
-        this.color = color;
-    }*/
-    //dodanie pionka do domku gracza
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+        out.defaultWriteObject();
+        out.writeObject(currentPawn != null ? pawnsInGame.indexOf(currentPawn) : -1);
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        int currentPawnIndex = (int) in.readObject();
+        if (currentPawnIndex >= 0 && currentPawnIndex < pawnsInGame.size()) {
+            currentPawn = pawnsInGame.get(currentPawnIndex);
+        } else {
+            currentPawn = null;
+        }
+    }
+
     public void addPawnToHome(Pawn pawn) {
         pawnsAtBase.add(pawn);
     }
-    //przeniesienie pionka z domku do gry
-    public void MovePawnToGame(Pawn pawn) {
-        if(pawnsAtBase.contains(pawn)) {
+
+    public void movePawnToGame(Pawn pawn) {
+        if (pawnsAtBase.contains(pawn)) {
             pawnsAtBase.remove(pawn);
             pawnsInGame.add(pawn);
-        }
-        else{
+        } else {
             throw new IllegalArgumentException("Pawn is not in base");
         }
     }
-    //przeniesienie pionka z gry do domku(jakby został zbity)
+
     public void movePawnToBase(Pawn pawn) {
-        if(pawnsInGame.contains(pawn)) {
+        if (pawnsInGame.contains(pawn)) {
             pawnsInGame.remove(pawn);
             pawnsAtBase.add(pawn);
-        }
-        else{
+        } else {
             throw new IllegalArgumentException("Pawn is not in game list");
         }
     }
 
-    //przeniesienie pionka z gry do bazy celu idk
     public void movePawnToHome(Pawn pawn) {
-        if(pawnsInGame.contains(pawn)) {
+        if (pawnsInGame.contains(pawn)) {
             pawnsInGame.remove(pawn);
             pawnsAtHome.add(pawn);
-        }
-        else{
+        } else {
             throw new IllegalArgumentException("Pawn is not in game list");
         }
     }
@@ -72,9 +83,11 @@ public class Player extends User {
     public List<Pawn> getPawnsAtBase() {
         return pawnsAtBase;
     }
+
     public List<Pawn> getPawnsInGame() {
         return pawnsInGame;
     }
+
     public List<Pawn> getPawnsAtHome() {
         return pawnsAtHome;
     }
@@ -84,10 +97,9 @@ public class Player extends User {
     }
 
     public void setCurrentPawn(Pawn pawn) {
-        if(pawnsInGame.contains(pawn)) {
+        if (pawnsInGame.contains(pawn)) {
             this.currentPawn = pawn;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Pawn does not belong to this player or not in game");
         }
     }
@@ -95,12 +107,15 @@ public class Player extends User {
     public void grantExtraRoll() {
         this.hasExtraRoll = true;
     }
+
     public boolean hasExtraRoll() {
         return hasExtraRoll;
     }
+
     public void useExtraRoll() {
         this.hasExtraRoll = false;
     }
+
     public String getUserType() {
         return "Player";
     }

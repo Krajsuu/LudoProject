@@ -1,16 +1,20 @@
 package model;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-public class Field {
+public class Field implements Serializable {
+    private static final long serialVersionUID = 1L; // Wersja serializacji
+
     private static final int TOTAL_CELLS = 52; // Liczba pól na głównej ścieżce
     private static final int CELLS_PER_PLAYER = 6; // Liczba pól w "domku" dla każdego gracza
     private ArrayList<Point> boardPositions; // Współrzędne pól planszy
     private Point[][] playerHomes; // Pozycje startowe dla każdego gracza
     private Point[][] goalAreas; // Obszary "domku" dla graczy
-    private HashMap<Pawn, Point> pawnPositions; // Mapa przechowująca pozycje pionków
+    private Map<Pawn, Point> pawnPositions; // Mapa przechowująca pozycje pionków
 
     // Konstruktor inicjalizujący planszę, domki i pozycje graczy
     public Field() {
@@ -38,10 +42,10 @@ public class Field {
     // Inicjalizacja pozycji startowych pionków
     private void initializePlayerHomes() {
         playerHomes = new Point[4][4]; // 4 graczy, po 4 pionki każdy
-        playerHomes[0] = new Point[] { new Point(50, 50), new Point(90, 50), new Point(50, 90), new Point(90, 90) };
-        playerHomes[1] = new Point[] { new Point(310, 50), new Point(350, 50), new Point(310, 90), new Point(350, 90) };
-        playerHomes[2] = new Point[] { new Point(310, 310), new Point(350, 310), new Point(310, 350), new Point(350, 350) };
-        playerHomes[3] = new Point[] { new Point(50, 310), new Point(90, 310), new Point(50, 350), new Point(90, 350) };
+        playerHomes[0] = new Point[]{new Point(50, 50), new Point(90, 50), new Point(50, 90), new Point(90, 90)};
+        playerHomes[1] = new Point[]{new Point(310, 50), new Point(350, 50), new Point(310, 90), new Point(350, 90)};
+        playerHomes[2] = new Point[]{new Point(310, 310), new Point(350, 310), new Point(310, 350), new Point(350, 350)};
+        playerHomes[3] = new Point[]{new Point(50, 310), new Point(90, 310), new Point(50, 350), new Point(90, 350)};
     }
 
     // Inicjalizacja obszarów "domków" graczy
@@ -110,5 +114,27 @@ public class Field {
     // Resetuje stan planszy
     public void resetBoard() {
         pawnPositions.clear();
+    }
+
+    // Serializacja pola pawnPositions
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+        out.defaultWriteObject();
+        out.writeInt(pawnPositions.size());
+        for (Map.Entry<Pawn, Point> entry : pawnPositions.entrySet()) {
+            out.writeObject(entry.getKey());
+            out.writeObject(entry.getValue());
+        }
+    }
+
+    // Deserializacja pola pawnPositions
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        int size = in.readInt();
+        pawnPositions = new HashMap<>();
+        for (int i = 0; i < size; i++) {
+            Pawn key = (Pawn) in.readObject();
+            Point value = (Point) in.readObject();
+            pawnPositions.put(key, value);
+        }
     }
 }

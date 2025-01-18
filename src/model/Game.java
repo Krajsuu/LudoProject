@@ -1,12 +1,15 @@
 package model;
 
 import javax.swing.*;
-import java.awt.Point;
 import java.awt.*;
+import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Game {
-    private ArrayList<Player> players;
+public class Game implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private ArrayList<Player> players; // Gracze w grze
     private Dice dice;
     private Field board;
 
@@ -158,12 +161,15 @@ public class Game {
     public ArrayList<Pawn> getRedPawns() {
         return redPawns;
     }
+
     public ArrayList<Pawn> getBluePawns() {
         return bluePawns;
     }
+
     public ArrayList<Pawn> getYellowPawns() {
         return yellowPawns;
     }
+
     public ArrayList<Pawn> getGreenPawns() {
         return greenPawns;
     }
@@ -178,5 +184,15 @@ public class Game {
 
     public Field getBoard() {
         return board;
+    }
+
+    /**
+     * Dodano metodę getUsers do zwracania listy użytkowników w grze.
+     *
+     * @return lista obiektów User
+     */
+    public ArrayList<User> getUsers() {
+        ArrayList<User> users = new ArrayList<>(players);
+        return users;
     }
 }
