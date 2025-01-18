@@ -87,7 +87,7 @@ public class UserInfo extends JPanel {
         playerIcon.setBackground(playerColor);
     }
 
-    public void setPlayerIcon(String iconPath){
+    public void setPlayerIcon(String iconPath) {
         ImageIcon icon = new ImageIcon(iconPath);
         ImageIcon scaledIcon = new ImageIcon(
                 icon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH)
@@ -95,15 +95,15 @@ public class UserInfo extends JPanel {
         playerIcon.setIcon(scaledIcon);
     }
 
-    public String getPlayerNickname(){
+    public String getPlayerNickname() {
         return playerNickname.getText();
     }
 
-    public Color getPlayerColor(){
+    public Color getPlayerColor() {
         return playerColor;
     }
 
-    public JLabel getPlayerIcon(){
+    public JLabel getPlayerIcon() {
         return playerIcon;
     }
 }

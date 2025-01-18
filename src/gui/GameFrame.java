@@ -43,9 +43,9 @@ public class GameFrame implements PanelsInterface {
                 field.setVerticalAlignment(SwingConstants.CENTER);
                 field.setOpaque(true); // Umożliwia ustawienie koloru
                 //kolorowanko
-                switch (row){
+                switch (row) {
                     case 0:
-                    case 12:{
+                    case 12: {
                         if (col >= 0 && col <= 4) {
                             field.setBackground(row == 0 ? Color.GREEN : Color.RED);
                         } else if (col >= 8 && col <= 12) {
@@ -60,7 +60,7 @@ public class GameFrame implements PanelsInterface {
                     case 2:
                     case 3:
                     case 9:
-                    case 10:{
+                    case 10: {
                         if ((col >= 1 && col <= 3) || (col >= 9 && col <= 11)) {
                             field.setBackground(Color.WHITE);
                         } else if (col == 5 || col == 7) {
@@ -71,23 +71,23 @@ public class GameFrame implements PanelsInterface {
                             } else if (col == 0 || col == 4) {
                                 field.setBackground(row >= 1 && row <= 3 ? Color.GREEN : Color.RED);
                             } else {
-                                field.setBackground(row >= 1 && row <= 3  ? Color.YELLOW : Color.BLUE);
+                                field.setBackground(row >= 1 && row <= 3 ? Color.YELLOW : Color.BLUE);
                             }
                         }
-                        if((row == 1 && col == 7)|| (row == 11 && col == 5)){
+                        if ((row == 1 && col == 7) || (row == 11 && col == 5)) {
                             field.setBackground(col == 7 ? Color.YELLOW : Color.RED);
 
                         }
                     }
                     break;
                     case 4:
-                    case 8:{
+                    case 8: {
                         if (col == 5 || col == 7) {
                             field.setBackground(Color.LIGHT_GRAY);
                         } else {
-                            if(col == 6){
+                            if (col == 6) {
                                 field.setBackground(row == 4 ? Color.YELLOW : Color.RED);
-                            } else if (col >=0 && col <= 4){
+                            } else if (col >= 0 && col <= 4) {
                                 field.setBackground(row == 4 ? Color.GREEN : Color.RED);
                             } else {
                                 field.setBackground(row == 4 ? Color.YELLOW : Color.BLUE);
@@ -96,27 +96,27 @@ public class GameFrame implements PanelsInterface {
                     }
                     break;
                     case 5:
-                        if(col == 6) {
+                        if (col == 6) {
                             field.setBackground(Color.YELLOW);
-                        } else if(col == 1) {
+                        } else if (col == 1) {
                             field.setBackground(Color.GREEN);
                         } else {
                             field.setBackground(Color.LIGHT_GRAY);
                         }
                         break;
                     case 6:
-                        if(col == 0 || col == 12){
+                        if (col == 0 || col == 12) {
                             field.setBackground(Color.LIGHT_GRAY);
-                        } else if(col == 6){
+                        } else if (col == 6) {
                             field.setBackground(Color.BLACK);
                         } else {
                             field.setBackground((col >= 1 && col <= 5) ? Color.GREEN : Color.BLUE);
                         }
                         break;
                     case 7:
-                        if(col == 6){
+                        if (col == 6) {
                             field.setBackground(Color.RED);
-                        } else if(col == 11){
+                        } else if (col == 11) {
                             field.setBackground(Color.BLUE);
                         } else {
                             field.setBackground(Color.LIGHT_GRAY);
@@ -125,7 +125,6 @@ public class GameFrame implements PanelsInterface {
 
 
                 }
-
 
 
                 field.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -147,19 +146,19 @@ public class GameFrame implements PanelsInterface {
         this.game = new Game(users);
         createUIComponents();
         createPawnGridOverlay();
-        parentFrame.setSize(1080,680 );
-        playersPanel.setLayout(new GridLayout(users.size(),1,5,5));
-        for(int i = 0; i < users.size(); i++){
+        parentFrame.setSize(1080, 680);
+        playersPanel.setLayout(new GridLayout(users.size(), 1, 5, 5));
+        for (int i = 0; i < users.size(); i++) {
             playersPanel.add(new JPanel().add(new UserInfo(users.get(i))));
         }
         diceButton.setText("");
-        diceButton.setIcon(new ImageIcon(new ImageIcon("data/images/diceImages/1.png").getImage().getScaledInstance(50,50, Image.SCALE_SMOOTH)));
+        diceButton.setIcon(new ImageIcon(new ImageIcon("data/images/diceImages/1.png").getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
 
         //losowanie kostka diceValue
         diceButton.addActionListener(e -> {
             this.diceValue = game.rollDice();
 
-            if(diceValue < 1 || diceValue > 6){
+            if (diceValue < 1 || diceValue > 6) {
                 System.err.println("Invalid dice value " + diceValue);
                 return;
             }

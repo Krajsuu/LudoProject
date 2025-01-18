@@ -131,7 +131,7 @@ public class NewGameFrame implements PanelsInterface {
         users.clear();
 
         int humanPlayers = Integer.parseInt((String) HumanPlayerComboBox.getSelectedItem());
-        int botPlayers   = Integer.parseInt((String) BotPlayerComboBox.getSelectedItem());
+        int botPlayers = Integer.parseInt((String) BotPlayerComboBox.getSelectedItem());
 
         // Suma graczy nie może przekraczać 4
         if (humanPlayers + botPlayers > 4) {
@@ -162,7 +162,9 @@ public class NewGameFrame implements PanelsInterface {
 
             humanTextField.addFocusListener(new FocusListener() {
                 @Override
-                public void focusGained(FocusEvent e) {}
+                public void focusGained(FocusEvent e) {
+                }
+
                 @Override
                 public void focusLost(FocusEvent e) {
                     player.setUsername(humanTextField.getText());
@@ -190,7 +192,9 @@ public class NewGameFrame implements PanelsInterface {
 
             botTextField.addFocusListener(new FocusListener() {
                 @Override
-                public void focusGained(FocusEvent e) {}
+                public void focusGained(FocusEvent e) {
+                }
+
                 @Override
                 public void focusLost(FocusEvent e) {
                     bot.setUsername(botTextField.getText());

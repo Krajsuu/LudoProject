@@ -23,9 +23,8 @@ public enum SwingColor {
     }
 
 
-
-    public static Color playerColor(int i){
-        switch(i){
+    public static Color playerColor(int i) {
+        switch (i) {
             case 0:
                 return Color.red;
             case 1:
