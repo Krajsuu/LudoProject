@@ -12,42 +12,46 @@ import model.Player;
 import model.Bot;
 import utils.SwingColor;
 import java.util.ArrayList;
-/**
- * Klasa NewGameFrame odpowiada za wyświetlenie okna do rozpoczęcia nowej gry.
- * Umożliwia wybór liczby graczy oraz ich nazw.
- */
-public class NewGameFrame implements PanelsInterface {
-    /**
-     * Klasa HintText dziedzicząca po JTextField, która dodaje podpowiedź do pola tekstowego.
-     */
-    private class HintText extends JTextField {
-        // Deklaracja zmiennych
-        private final String hint; // Podpowiedź
-        private boolean showingHint; // Czy podpowiedź jest wyświetlana
+import java.util.Arrays;
+import java.util.List;
 
+public class NewGameFrame implements PanelsInterface {
+    private class HintText extends JTextField {
+        private final String hint;
+        private boolean showingHint;
 
         /**
-         * Konstruktor klasy HintText
+         * Konstruktor bezargumentowy (domyślny), wymagany przez IntelliJ
+         */
+        public HintText() {
+            this.hint = ""; // Domyślna podpowiedź
+            this.showingHint = true;
+            initializeHint();
+        }
+
+        /**
+         * Konstruktor z podpowiedzią jako argument
          *
          * @param hint Podpowiedź
          */
         public HintText(final String hint) {
-            super(hint); // Wywołanie konstruktora klasy nadrzędnej
-            this.hint = hint; // Przypisanie podpowiedzi
-            this.showingHint = true; // Ustawienie, że podpowiedź jest wyświetlana
+            this.hint = hint;
+            this.showingHint = true;
+            initializeHint();
+        }
 
-            setForeground(Color.GRAY); // Ustawienie koloru tekstu na szary
-            setFont(getFont().deriveFont(Font.BOLD)); // Ustawienie czcionki na pogrubioną
+        /**
+         * Metoda inicjalizująca hint i listenery
+         */
+        private void initializeHint() {
+            setText(hint);
+            setForeground(Color.GRAY);
+            setFont(getFont().deriveFont(Font.BOLD));
 
-            /**
-             * Dodanie zdarzenia FocusListener do pola tekstowego.
-             * Po uzyskaniu focusu, jeśli pole tekstowe zawiera podpowiedź, to zostanie wyczyszczone.
-             * Po utraceniu focusu, jeśli pole tekstowe jest puste, to zostanie wyświetlona podpowiedź.
-             */
-            this.addFocusListener(new FocusListener() {
+            addFocusListener(new FocusListener() {
                 @Override
                 public void focusGained(FocusEvent e) {
-                    if (getText().isEmpty()) {
+                    if (showingHint) {
                         setText("");
                         setForeground(Color.BLACK);
                         showingHint = false;
@@ -65,67 +69,37 @@ public class NewGameFrame implements PanelsInterface {
             });
         }
 
-        /**
-         * Metoda getText zwraca tekst z pola tekstowego, jeśli nie jest wyświetlana podpowiedź.
-         * W przeciwnym razie zwraca pusty ciąg znaków.
-         *
-         * @return tekst z pola tekstowego lub pusty ciąg znaków
-         */
         @Override
         public String getText() {
             return showingHint ? "" : super.getText();
         }
     }
 
-    // Deklaracja zmiennych
-    private JPanel NewGamePanel; // Panel główny
-    private JLabel TopLabel; // Nagłówek
-    private JPanel choiceMenu; // Panel wyboru liczby graczy
-    private JPanel playersPanel; // Panel z polami do wprowadzenia nazw graczy
-    private JComboBox BotPlayerComboBox; // Lista rozwijana z liczbą botów
-    private JComboBox HumanPlayerComboBox; // Lista rozwijana z liczbą graczy
-    private JButton backButton; // Przycisk powrotu
+    private JPanel NewGamePanel;
+    private JLabel TopLabel;
+    private JPanel choiceMenu;
+    private JPanel playersPanel;
+    private JComboBox BotPlayerComboBox;
+    private JComboBox HumanPlayerComboBox;
+    private JButton backButton;
     private JButton startGameButton;
     private JTextField ddddTextField;
-    private ArrayList<User> users = new ArrayList<User>();
-    // Tablica z graczami
-    private int amountOfPlayers = 0; // Liczba graczy
-    private JFrame parentFrame; // Okno nadrzędne
 
-    /**
-     * Konstruktor klasy NewGameFrame
-     *
-     * @param parentFrame Okno nadrzędne
-     */
+    private ArrayList<User> users = new ArrayList<>();
+    private JFrame parentFrame;
+
+    // *** Usuwamy stare `amountOfPlayers`, a w zamian będziemy pobierać kolory z listy. ***
+    // private int amountOfPlayers = 0; // usuwamy to, bo często powodowało duplikaty
+
     public NewGameFrame(JFrame parentFrame) {
-        this.parentFrame = parentFrame; // Przypisanie okna nadrzędnego
+        this.parentFrame = parentFrame;
 
-        /**
-         * Dodanie zdarzenia ActionListener do przycisku startGameButton.
-         * Po kliknięciu przycisku zostanie pobrana liczba graczy oraz ich nazwy.
-         * Następnie zostanie utworzona nowa gra z podanymi parametrami.
-         */
         HumanPlayerComboBox.setModel(new DefaultComboBoxModel(new String[]{"0", "1", "2", "3", "4"}));
         BotPlayerComboBox.setModel(new DefaultComboBoxModel(new String[]{"0", "1", "2", "3", "4"}));
 
+        HumanPlayerComboBox.addActionListener(e -> updatePlayersFields());
+        BotPlayerComboBox.addActionListener(e -> updatePlayersFields());
 
-        HumanPlayerComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updatePlayersFields();
-            }
-        });
-
-        BotPlayerComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updatePlayersFields();
-            }
-        });
-        /**
-         * Dodanie zdarzenia ActionListener do przycisku backButton.
-         * Po kliknięciu przycisku zostanie wyświetlone okno MenuFrame.
-         */
         backButton.addActionListener(e -> {
             parentFrame.setContentPane(((MenuFrame) parentFrame).getOriginalPanel());
             parentFrame.revalidate();
@@ -138,7 +112,6 @@ public class NewGameFrame implements PanelsInterface {
                 GameFrame gameFrame = new GameFrame(parentFrame, users);
                 parentFrame.setContentPane(gameFrame.getMainPanel());
                 parentFrame.revalidate();
-
             }
         });
     }
@@ -148,24 +121,30 @@ public class NewGameFrame implements PanelsInterface {
     }
 
     /**
-     * Metoda updatePlayersFields aktualizuje pola tekstowe z nazwami graczy w zależności od wybranej liczby graczy.
+     * Metoda updatePlayersFields aktualizuje listę (users),
+     * tworząc graczy i boty z unikatowymi kolorami spośród {RED, BLUE, GREEN, YELLOW}.
      */
     private void updatePlayersFields() {
-        playersPanel.removeAll(); // Usunięcie poprzednich pól
-        playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.Y_AXIS)); // Ustawienie układu
+        playersPanel.removeAll();
+        playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.Y_AXIS));
 
-        users.clear(); // Czyścimy listę użytkowników, aby uniknąć nadpisywania
+        users.clear();
 
         int humanPlayers = Integer.parseInt((String) HumanPlayerComboBox.getSelectedItem());
-        int botPlayers = Integer.parseInt((String) BotPlayerComboBox.getSelectedItem());
+        int botPlayers   = Integer.parseInt((String) BotPlayerComboBox.getSelectedItem());
 
-        // Sprawdzenie, czy suma graczy nie przekracza limitu
+        // Suma graczy nie może przekraczać 4
         if (humanPlayers + botPlayers > 4) {
-            JOptionPane.showMessageDialog(null, "Za dużo graczy", "Błąd", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Za dużo graczy! Max 4.", "Błąd", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Dodanie graczy-ludzi
+        // Przygotowujemy listę dostępnych kolorów: [RED, BLUE, GREEN, YELLOW]
+        List<Color> colorPool = new ArrayList<>(Arrays.asList(
+                Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW
+        ));
+
+        // Dodajemy graczy-ludzi
         for (int i = 0; i < humanPlayers; i++) {
             JLabel humanLabel = new JLabel("Gracz " + (i + 1) + " (Człowiek): ");
             HintText humanTextField = new HintText("Podaj nazwę dla Gracza " + (i + 1));
@@ -175,16 +154,15 @@ public class NewGameFrame implements PanelsInterface {
             humanPanel.add(humanLabel);
             humanPanel.add(humanTextField);
 
-            // Tworzenie obiektu Player i dodanie do listy
-            Player player = new Player("Gracz " + (i + 1), SwingColor.playerColor(amountOfPlayers++));
+            // Pobieramy pierwszy wolny kolor z puli
+            Color assignedColor = colorPool.isEmpty() ? Color.BLACK : colorPool.remove(0);
+
+            Player player = new Player("Gracz " + (i + 1), assignedColor);
             users.add(player);
 
-            // Listener do aktualizacji nazwy gracza
             humanTextField.addFocusListener(new FocusListener() {
                 @Override
-                public void focusGained(FocusEvent e) {
-                }
-
+                public void focusGained(FocusEvent e) {}
                 @Override
                 public void focusLost(FocusEvent e) {
                     player.setUsername(humanTextField.getText());
@@ -194,7 +172,7 @@ public class NewGameFrame implements PanelsInterface {
             playersPanel.add(humanPanel);
         }
 
-        // Dodanie graczy-botów
+        // Dodajemy graczy-botów
         for (int i = 0; i < botPlayers; i++) {
             JLabel botLabel = new JLabel("Gracz " + (humanPlayers + i + 1) + " (Bot): ");
             HintText botTextField = new HintText("Podaj nazwę dla Bota " + (i + 1));
@@ -204,16 +182,15 @@ public class NewGameFrame implements PanelsInterface {
             botPanel.add(botLabel);
             botPanel.add(botTextField);
 
-            // Tworzenie obiektu Bot i dodanie do listy
-            Bot bot = new Bot("Bot " + (i + 1), SwingColor.playerColor(amountOfPlayers++));
+            // Pobieramy pierwszy wolny kolor z puli
+            Color assignedColor = colorPool.isEmpty() ? Color.BLACK : colorPool.remove(0);
+
+            Bot bot = new Bot("Bot " + (i + 1), assignedColor);
             users.add(bot);
 
-            // Listener do aktualizacji nazwy bota
             botTextField.addFocusListener(new FocusListener() {
                 @Override
-                public void focusGained(FocusEvent e) {
-                }
-
+                public void focusGained(FocusEvent e) {}
                 @Override
                 public void focusLost(FocusEvent e) {
                     bot.setUsername(botTextField.getText());
@@ -227,4 +204,3 @@ public class NewGameFrame implements PanelsInterface {
         playersPanel.repaint();
     }
 }
-
