@@ -149,7 +149,7 @@ public class NewGameFrame implements PanelsInterface {
         }
 
         List<Color> colorPool = new ArrayList<>(Arrays.asList(
-                Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW
+                Color.YELLOW, Color.BLUE, Color.GREEN, Color.RED
         ));
 
         // Dodajemy graczy-ludzi

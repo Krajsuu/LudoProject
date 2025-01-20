@@ -16,7 +16,7 @@ public class Pawn implements Serializable {
     private transient ImageIcon pawnIcon;
     private boolean isFinished;
 
-    public Pawn(Player owner, Point homePosition, Point goalPosition, ImageIcon icon) {
+    public Pawn(Player owner, Point homePosition,ImageIcon icon) {
         this.owner = owner;
         this.homePosition = homePosition;
         this.goalPosition = goalPosition;
@@ -40,6 +40,9 @@ public class Pawn implements Serializable {
     public Point getCurrentPosition() {
         return currentPosition;
     }
+
+
+
 
     public void setCurrentPosition(Point position) {
         this.currentPosition = position;

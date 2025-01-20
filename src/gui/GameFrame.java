@@ -5,9 +5,11 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import model.Game;
+import model.Pawn;
 import model.User;
 import components.UserInfo;
 import interfaces.PanelsInterface;
+import model.Player;
 
 public class GameFrame implements PanelsInterface {
     private JPanel mainPanel;
@@ -20,14 +22,14 @@ public class GameFrame implements PanelsInterface {
     private JButton quitButton;
     private JButton diceButton;
     private Game game;
-
+    private JLabel[][] board = new JLabel[13][13];
     private JFrame parentFrame;
     private ArrayList<User> users = new ArrayList<>();
 
     public GameFrame(JFrame parentFrame, ArrayList<User> users) {
         this.parentFrame = parentFrame;
         this.users = users;
-        this.game = new Game(users);
+        this.game = new Game(users, this);
 
         parentFrame.setSize(1080, 680);
         playersPanel.setLayout(new GridLayout(users.size(), 1, 5, 5));
@@ -108,6 +110,7 @@ public class GameFrame implements PanelsInterface {
             boardPanel = new JPanel();
             boardPanel.setLayout(new BorderLayout());
             // Panel dla środkowej części planszy (główne pole gry)
+
             JPanel mainBoardPanel = new JPanel(new GridLayout(13, 13));
             mainBoardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             // Tworzenie pól planszy
@@ -197,6 +200,7 @@ public class GameFrame implements PanelsInterface {
                             }
                             break;
                     }
+                    board[row][col] = field;
                     field.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                     mainBoardPanel.add(field);
                 }
@@ -205,5 +209,9 @@ public class GameFrame implements PanelsInterface {
     }
     public JPanel getMainPanel() {
         return mainPanel;
+    }
+    public void setPawn(Pawn pawn) {
+        Point p = pawn.getCurrentPosition();
+        board[p.x][p.y].setIcon(pawn.getPawnIcon());
     }
 }
