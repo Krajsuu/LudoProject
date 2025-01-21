@@ -18,6 +18,8 @@ public class Game implements Serializable {
     private Dice dice;
     private GameFrame gameFrame;
 
+    private Player currentPlayer;
+
     private ArrayList<Pawn> redPawns;
     private ArrayList<Pawn> bluePawns;
     private ArrayList<Pawn> yellowPawns;
@@ -37,6 +39,7 @@ public class Game implements Serializable {
         this.bluePawns = new ArrayList<>();
         this.yellowPawns = new ArrayList<>();
         this.greenPawns = new ArrayList<>();
+
 
 
         //Tablice do przejscia z pozycjami pionków
@@ -266,6 +269,12 @@ public class Game implements Serializable {
             players.add(player);
         }
         initializeGame();
+        this.currentPlayer = players.get(0);
+
+        for(Pawn pawn : currentPlayer.getPlayerPawns()){
+            pawn.getPawnComponent().makeClickable(true);
+        }
+        gameFrame.diceclickability(true);
     }
 
     private void initializeGame() {
@@ -296,6 +305,7 @@ public class Game implements Serializable {
                 player.addPawnToHome(g2);
                 player.addPawnToHome(g3);
                 player.addPawnToHome(g4);
+                player.setPlayerPawns(Arrays.asList(g1, g2, g3, g4));
 
                 gameFrame.setPawn(g1);
                 gameFrame.setPawn(g2);
@@ -325,7 +335,7 @@ public class Game implements Serializable {
                 player.addPawnToHome(r2);
                 player.addPawnToHome(r3);
                 player.addPawnToHome(r4);
-
+                player.setPlayerPawns(Arrays.asList(r1, r2, r3, r4));
                 gameFrame.setPawn(r1);
                 gameFrame.setPawn(r2);
                 gameFrame.setPawn(r3);
@@ -355,7 +365,7 @@ public class Game implements Serializable {
                 player.addPawnToHome(y2);
                 player.addPawnToHome(y3);
                 player.addPawnToHome(y4);
-
+                player.setPlayerPawns(Arrays.asList(y1, y2, y3, y4));
                 gameFrame.setPawn(y1);
                 gameFrame.setPawn(y2);
                 gameFrame.setPawn(y3);
@@ -380,7 +390,7 @@ public class Game implements Serializable {
                 bluePawns.add(b2);
                 bluePawns.add(b3);
                 bluePawns.add(b4);
-
+                player.setPlayerPawns(Arrays.asList(b1, b2, b3, b4));
                 player.addPawnToHome(b1);
                 player.addPawnToHome(b2);
                 player.addPawnToHome(b3);
@@ -393,6 +403,26 @@ public class Game implements Serializable {
             }
         }
 
+
+
+    }
+
+    public void nextTurn() {
+        int currentPlayerIndex = players.indexOf(currentPlayer);
+        currentPlayer.NotGiveTurn();
+        int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        players.get(nextPlayerIndex).GiveTurn();
+        //disable old player pawns
+        for (Pawn pawn : currentPlayer.getPlayerPawns()) {
+            pawn.getPawnComponent().makeClickable(false);
+        }
+
+        currentPlayer = players.get(nextPlayerIndex);
+        //enable new player pawns
+        for(Pawn pawn : currentPlayer.getPlayerPawns()){
+            pawn.getPawnComponent().makeClickable(true);
+        }
+        gameFrame.diceclickability(true);
     }
 
     public ArrayList<Pawn> getRedPawns() {
@@ -418,6 +448,7 @@ public class Game implements Serializable {
     //Rollowanie kostki
     public int rollDice() {
         return dice.roll();
+
     }
 
 

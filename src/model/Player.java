@@ -8,6 +8,7 @@ import java.awt.Color;
 public class Player extends User implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private List<Pawn> playerPawns;
     private List<Pawn> pawnsAtBase; // pionki w bazie
     private List<Pawn> pawnsInGame; // Pionki na planszy
     private List<Pawn> pawnsAtHome; // pionki w domku
@@ -20,9 +21,11 @@ public class Player extends User implements Serializable {
         this.pawnsAtBase = new ArrayList<>();
         this.pawnsInGame = new ArrayList<>();
         this.pawnsAtHome = new ArrayList<>();
+
         this.hasExtraRoll = false;
         this.currentPawn = null;
         this.hasTurn = false;
+        this.playerPawns = new ArrayList<>();
     }
 
     // Konstruktor bezargumentowy wymagany do deserializacji
@@ -35,6 +38,14 @@ public class Player extends User implements Serializable {
         this.currentPawn = null;
     }
 
+
+    public void setPlayerPawns(List<Pawn> playerPawns) {
+        this.playerPawns = playerPawns;
+    }
+
+    public List<Pawn> getPlayerPawns() {
+        return playerPawns;
+    }
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
         out.defaultWriteObject();
         out.writeObject(currentPawn != null ? pawnsInGame.indexOf(currentPawn) : -1);

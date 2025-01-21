@@ -9,7 +9,6 @@ import model.Pawn;
 import model.User;
 import components.UserInfo;
 import interfaces.PanelsInterface;
-import model.Player;
 
 public class GameFrame implements PanelsInterface {
     private JPanel mainPanel;
@@ -17,14 +16,14 @@ public class GameFrame implements PanelsInterface {
     private JPanel buttonsPanel;
     private JPanel boardPanel;
     private JPanel dicePanel;
-    private int diceValue;
     private JButton SaveButton;
     private JButton quitButton;
     private JButton diceButton;
     private Game game;
-    private JLabel[][] board = new JLabel[13][13];
+    private JPanel[][] board = new JPanel[13][13];
     private JFrame parentFrame;
     private ArrayList<User> users = new ArrayList<>();
+    private int diceValue;
 
     public GameFrame(JFrame parentFrame, ArrayList<User> users) {
         this.parentFrame = parentFrame;
@@ -50,7 +49,7 @@ public class GameFrame implements PanelsInterface {
                 System.err.println("Invalid dice value " + diceValue);
                 return;
             }
-
+            diceclickability(false);
             String imagePath = "data/images/diceImages/" + diceValue + ".png";
             diceButton.setIcon(new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
         });
@@ -70,6 +69,14 @@ public class GameFrame implements PanelsInterface {
                 parentFrame.repaint();
             }
         });
+    }
+
+    public void diceclickability(boolean clickable) {
+        diceButton.setEnabled(clickable);
+    }
+
+    public boolean getdiceclickability() {
+        return diceButton.isEnabled();
     }
 
     private void saveGame() {
@@ -117,9 +124,7 @@ public class GameFrame implements PanelsInterface {
             // Tworzenie pól planszy
             for (int row = 0; row < 13; row++) {
                 for (int col = 0; col < 13; col++) {
-                    JLabel field = new JLabel();
-                    field.setHorizontalAlignment(SwingConstants.CENTER);
-                    field.setVerticalAlignment(SwingConstants.CENTER);
+                    JPanel field = new JPanel();
                     field.setOpaque(true); // Umożliwia ustawienie koloru
                     //kolorowanko
                     switch (row) {
@@ -201,7 +206,7 @@ public class GameFrame implements PanelsInterface {
                             }
                             break;
                     }
-                    board[row][col] = field;
+                    this.board[row][col] = field;
                     field.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                     mainBoardPanel.add(field);
                 }
@@ -213,6 +218,15 @@ public class GameFrame implements PanelsInterface {
     }
     public void setPawn(Pawn pawn) {
         Point p = pawn.getCurrentPosition();
-        board[p.x][p.y].setIcon(pawn.getPawnIcon());
+        board[p.x][p.y].add(pawn.getPawnComponent());
+    }
+    public void removePawn(Pawn pawn) {
+        Point p = pawn.getCurrentPosition();
+        board[p.x][p.y].remove(pawn.getPawnComponent());
+    }
+    public void movePawn(Pawn pawn, Point newPosition) {
+        removePawn(pawn);
+        pawn.setCurrentPosition(newPosition);
+        setPawn(pawn);
     }
 }

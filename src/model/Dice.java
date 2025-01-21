@@ -9,11 +9,12 @@ public class Dice implements Serializable {
     private int randomValue; // Aktualna wartość wyrzucona na kostce
     private transient Random random; // Generator liczb losowych (transient - nie jest serializowalny)
     private static final String IMAGE_PATH = "data/images/diceImages/"; // Stała ścieżka do obrazów kostki
-
+    private boolean isRolled ;
     // Konstruktor
     public Dice() {
         this.randomValue = 0;
         this.random = new Random();
+        this.isRolled = false;
     }
 
     // Rzut kostką
@@ -22,6 +23,7 @@ public class Dice implements Serializable {
             random = new Random(); // Odtwarzamy generator losowy po deserializacji
         }
         randomValue = random.nextInt(6) + 1; // Wartości od 1 do 6
+        isRolled = true;
         return randomValue;
     }
 
@@ -38,6 +40,14 @@ public class Dice implements Serializable {
     // Serializacja (zapisywanie obiektu)
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
         out.defaultWriteObject(); // Zapisujemy pola serializowalne
+    }
+
+    public boolean isRolled() {
+        return isRolled;
+    }
+
+    public void setRolled(boolean isRolled) {
+        this.isRolled = isRolled;
     }
 
     // Deserializacja (odtwarzanie obiektu)

@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.io.IOException;
+import components.PawnComponent;
 
 public class Pawn implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -18,6 +19,7 @@ public class Pawn implements Serializable {
     private transient ImageIcon pawnIcon;
     private boolean isFinished;
     private ArrayList<Point> walkTable;
+    private PawnComponent pawnComponent;
 
     public Pawn(Player owner, Point homePosition,Point startPosition,ArrayList<Point> walkTable, ImageIcon icon) {
         this.owner = owner;
@@ -28,7 +30,7 @@ public class Pawn implements Serializable {
         this.pawnIcon = icon;
         this.currentPosition = homePosition;
         this.isFinished = false;
-
+        this.pawnComponent = new PawnComponent(this);
     }
 
     public String getType() {
@@ -106,5 +108,9 @@ public class Pawn implements Serializable {
         in.defaultReadObject();
         String iconPath = (String) in.readObject();
         this.pawnIcon = iconPath != null ? new ImageIcon(iconPath) : null;
+    }
+
+    public PawnComponent getPawnComponent() {
+        return pawnComponent;
     }
 }
