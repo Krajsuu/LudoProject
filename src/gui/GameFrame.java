@@ -38,6 +38,7 @@ public class GameFrame implements PanelsInterface {
             playersPanel.add(new JPanel().add(new UserInfo(user)));
         }
 
+        //Kostka
         diceButton.setText("");
         diceButton.setIcon(new ImageIcon(new ImageIcon("data/images/diceImages/1.png")
                 .getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));

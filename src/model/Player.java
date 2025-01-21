@@ -22,6 +22,7 @@ public class Player extends User implements Serializable {
         this.pawnsAtHome = new ArrayList<>();
         this.hasExtraRoll = false;
         this.currentPawn = null;
+        this.hasTurn = false;
     }
 
     // Konstruktor bezargumentowy wymagany do deserializacji
@@ -118,5 +119,16 @@ public class Player extends User implements Serializable {
 
     public String getUserType() {
         return "Player";
+    }
+
+    public boolean DoesHaveTurn(){
+        return hasTurn;
+    }
+    //peak nazewnictwo
+    public void GiveTurn(){
+        hasTurn = true;
+    }
+    public void NotGiveTurn(){
+        hasTurn = false;
     }
 }

@@ -3,6 +3,7 @@ package model;
 import java.awt.Point;
 import javax.swing.ImageIcon;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.io.IOException;
 
@@ -12,17 +13,22 @@ public class Pawn implements Serializable {
     private Player owner;
     private Point currentPosition;
     private Point homePosition;
+    private Point startPosition;
     private Point goalPosition;
     private transient ImageIcon pawnIcon;
     private boolean isFinished;
+    private ArrayList<Point> walkTable;
 
-    public Pawn(Player owner, Point homePosition,ImageIcon icon) {
+    public Pawn(Player owner, Point homePosition,Point startPosition,ArrayList<Point> walkTable, ImageIcon icon) {
         this.owner = owner;
         this.homePosition = homePosition;
+        this.startPosition = startPosition;
         this.goalPosition = goalPosition;
+        this.walkTable = walkTable;
         this.pawnIcon = icon;
         this.currentPosition = homePosition;
         this.isFinished = false;
+
     }
 
     public String getType() {
