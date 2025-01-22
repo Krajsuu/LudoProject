@@ -44,8 +44,8 @@ public class GameFrame implements PanelsInterface {
                 .getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
 
         diceButton.addActionListener(e -> {
-            this.diceValue = game.rollDice();
             game.thisTurn(this.diceValue);
+            this.diceValue = game.rollDice();
 
             if (diceValue < 1 || diceValue > 6) {
                 System.err.println("Invalid dice value " + diceValue);
