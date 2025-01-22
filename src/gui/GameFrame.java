@@ -228,6 +228,7 @@ public class GameFrame implements PanelsInterface {
 
         board[p.x][p.y].revalidate();
         board[p.x][p.y].repaint();
+
     }
     public void movePawn(Pawn pawn, Point newPosition) {
         removePawn(pawn);
