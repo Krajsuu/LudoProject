@@ -49,7 +49,7 @@ public class Bot extends Player implements Serializable {
                 movePawnToGame(pawn);
             }
         } else {
-            pawnToMove.move(steps, board);
+            pawnToMove.move(steps);
         }
     }
 

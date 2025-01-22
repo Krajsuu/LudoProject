@@ -61,7 +61,7 @@ public class Player extends User implements Serializable {
         }
     }
 
-    public void addPawnToHome(Pawn pawn) {
+    public void addPawnToBase(Pawn pawn) {
         pawnsAtBase.add(pawn);
     }
 
@@ -109,11 +109,9 @@ public class Player extends User implements Serializable {
     }
 
     public void setCurrentPawn(Pawn pawn) {
-        if (pawnsInGame.contains(pawn)) {
-            this.currentPawn = pawn;
-        } else {
-            throw new IllegalArgumentException("Pawn does not belong to this player or not in game");
-        }
+
+        this.currentPawn = pawn;
+
     }
 
     public void grantExtraRoll() {

@@ -301,10 +301,10 @@ public class Game implements Serializable {
                 greenPawns.add(g3);
                 greenPawns.add(g4);
 
-                player.addPawnToHome(g1);
-                player.addPawnToHome(g2);
-                player.addPawnToHome(g3);
-                player.addPawnToHome(g4);
+                player.addPawnToBase(g1);
+                player.addPawnToBase(g2);
+                player.addPawnToBase(g3);
+                player.addPawnToBase(g4);
                 player.setPlayerPawns(Arrays.asList(g1, g2, g3, g4));
 
                 gameFrame.setPawn(g1);
@@ -331,10 +331,10 @@ public class Game implements Serializable {
                 redPawns.add(r3);
                 redPawns.add(r4);
 
-                player.addPawnToHome(r1);
-                player.addPawnToHome(r2);
-                player.addPawnToHome(r3);
-                player.addPawnToHome(r4);
+                player.addPawnToBase(r1);
+                player.addPawnToBase(r2);
+                player.addPawnToBase(r3);
+                player.addPawnToBase(r4);
                 player.setPlayerPawns(Arrays.asList(r1, r2, r3, r4));
                 gameFrame.setPawn(r1);
                 gameFrame.setPawn(r2);
@@ -361,10 +361,10 @@ public class Game implements Serializable {
                 yellowPawns.add(y3);
                 yellowPawns.add(y4);
 
-                player.addPawnToHome(y1);
-                player.addPawnToHome(y2);
-                player.addPawnToHome(y3);
-                player.addPawnToHome(y4);
+                player.addPawnToBase(y1);
+                player.addPawnToBase(y2);
+                player.addPawnToBase(y3);
+                player.addPawnToBase(y4);
                 player.setPlayerPawns(Arrays.asList(y1, y2, y3, y4));
                 gameFrame.setPawn(y1);
                 gameFrame.setPawn(y2);
@@ -391,10 +391,10 @@ public class Game implements Serializable {
                 bluePawns.add(b3);
                 bluePawns.add(b4);
                 player.setPlayerPawns(Arrays.asList(b1, b2, b3, b4));
-                player.addPawnToHome(b1);
-                player.addPawnToHome(b2);
-                player.addPawnToHome(b3);
-                player.addPawnToHome(b4);
+                player.addPawnToBase(b1);
+                player.addPawnToBase(b2);
+                player.addPawnToBase(b3);
+                player.addPawnToBase(b4);
 
                 gameFrame.setPawn(b1);
                 gameFrame.setPawn(b2);
@@ -449,6 +449,32 @@ public class Game implements Serializable {
     public int rollDice() {
         return dice.roll();
 
+    }
+
+    private static final int REQUIRED_ROLL_FOR_NEW_PAWN = 6;
+
+    public void thisTurn(int diceRollValue) {
+        Pawn currentPawn = currentPlayer.getCurrentPawn();
+        if (shouldMovePawnFromBase(diceRollValue)) {
+            gameFrame.movePawn(currentPawn,currentPawn.getStartPosition());
+            currentPlayer.movePawnToGame(currentPawn);
+        }
+        if(shouldPawnMove())
+        {
+            currentPawn.increaseWalkTableIndex(diceRollValue);
+            gameFrame.movePawn(currentPawn,currentPawn.getWalkTable().get(currentPawn.getWalkTableIndex()));
+        }
+        nextTurn();
+        gameFrame.updateDicePanelColor(currentPlayer);
+
+    }
+
+    private boolean shouldMovePawnFromBase(int diceRollValue) {
+        return diceRollValue == REQUIRED_ROLL_FOR_NEW_PAWN && !currentPlayer.getPawnsAtBase().isEmpty() && currentPlayer.getCurrentPawn().isAtHome();
+    }
+
+    private boolean shouldPawnMove(){
+        return !currentPlayer.getPawnsInGame().isEmpty() && currentPlayer.getCurrentPawn() != null && !currentPlayer.getCurrentPawn().isAtHome();
     }
 
 

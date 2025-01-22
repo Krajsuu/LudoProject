@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 import model.Game;
 import model.Pawn;
+import model.Player;
 import model.User;
 import components.UserInfo;
 import interfaces.PanelsInterface;
@@ -44,12 +45,13 @@ public class GameFrame implements PanelsInterface {
 
         diceButton.addActionListener(e -> {
             this.diceValue = game.rollDice();
+            game.thisTurn(this.diceValue);
 
             if (diceValue < 1 || diceValue > 6) {
                 System.err.println("Invalid dice value " + diceValue);
                 return;
             }
-            diceclickability(false);
+            //diceclickability(false);
             String imagePath = "data/images/diceImages/" + diceValue + ".png";
             diceButton.setIcon(new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
         });
@@ -223,10 +225,20 @@ public class GameFrame implements PanelsInterface {
     public void removePawn(Pawn pawn) {
         Point p = pawn.getCurrentPosition();
         board[p.x][p.y].remove(pawn.getPawnComponent());
+
+        board[p.x][p.y].revalidate();
+        board[p.x][p.y].repaint();
     }
     public void movePawn(Pawn pawn, Point newPosition) {
         removePawn(pawn);
         pawn.setCurrentPosition(newPosition);
         setPawn(pawn);
+    }
+
+    public void updateDicePanelColor(Player player){
+        Color color = player.getColor();
+        dicePanel.setBackground(color);
+        dicePanel.revalidate();
+        dicePanel.repaint();
     }
 }

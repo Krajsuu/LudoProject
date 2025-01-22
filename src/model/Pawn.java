@@ -20,6 +20,7 @@ public class Pawn implements Serializable {
     private boolean isFinished;
     private ArrayList<Point> walkTable;
     private PawnComponent pawnComponent;
+    private int walkTableIndex;
 
     public Pawn(Player owner, Point homePosition,Point startPosition,ArrayList<Point> walkTable, ImageIcon icon) {
         this.owner = owner;
@@ -31,6 +32,8 @@ public class Pawn implements Serializable {
         this.currentPosition = homePosition;
         this.isFinished = false;
         this.pawnComponent = new PawnComponent(this);
+        this.walkTableIndex = 0;
+
     }
 
     public String getType() {
@@ -56,6 +59,10 @@ public class Pawn implements Serializable {
         this.currentPosition = position;
     }
 
+    public Point getStartPosition() {
+        return startPosition;
+    }
+
     public boolean isAtHome() {
         return currentPosition.equals(homePosition);
     }
@@ -68,23 +75,8 @@ public class Pawn implements Serializable {
         this.isFinished = true;
     }
 
-    public void move(int steps, Field board) {
-        if (isFinished) return;
+    public void move(int steps) {
 
-        Point newPosition = board.calculateNewPosition(currentPosition, steps);
-        Pawn occupyingPawn = board.checkOccupied(newPosition);
-
-        if (occupyingPawn != null && !Objects.equals(occupyingPawn.getOwner(), this.owner)) {
-            occupyingPawn.returnToBase();
-            owner.grantExtraRoll();
-        }
-
-        setCurrentPosition(newPosition);
-        board.updatePosition(this, newPosition);
-
-        if (newPosition.equals(goalPosition)) {
-            markFinished();
-        }
     }
 
     public void returnToBase() {
@@ -112,5 +104,18 @@ public class Pawn implements Serializable {
 
     public PawnComponent getPawnComponent() {
         return pawnComponent;
+    }
+    public int getWalkTableIndex(){
+        return this.walkTableIndex;
+    }
+    public void increaseWalkTableIndex(int rollValue){
+        this.walkTableIndex = this.walkTableIndex + rollValue;
+        if(this.walkTableIndex >= this.walkTable.size()){
+            this.walkTableIndex = this.walkTableIndex - rollValue;
+        }
+    }
+
+    public ArrayList<Point> getWalkTable(){
+        return this.walkTable;
     }
 }
