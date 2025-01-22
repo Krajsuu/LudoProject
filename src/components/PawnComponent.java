@@ -8,6 +8,7 @@ public class PawnComponent extends JButton {
     public PawnComponent(Pawn pawn) {
         this.pawn = pawn;
         setIcon(pawn.getPawnIcon());
+        setDisabledIcon(pawn.getPawnIcon());
         setBorderPainted(false);
         setContentAreaFilled(false);
         makeClickable(false);
