@@ -26,6 +26,9 @@ public class GameFrame implements PanelsInterface {
     private ArrayList<User> users = new ArrayList<>();
     private int diceValue;
 
+    // NOWOŚĆ: przechowujemy listę UserInfo, żeby móc później aktualizować liczbę pionków
+    private ArrayList<UserInfo> userInfos;
+
     public GameFrame(JFrame parentFrame, ArrayList<User> users) {
         this.parentFrame = parentFrame;
         this.users = users;
@@ -34,8 +37,20 @@ public class GameFrame implements PanelsInterface {
         parentFrame.setSize(1080, 680);
         playersPanel.setLayout(new GridLayout(users.size(), 1, 5, 5));
 
+        userInfos = new ArrayList<>();
+
+        // Zamiast dodawać "new JPanel().add(...)" zapiszmy referencję, aby móc później aktualizować
         for (User user : users) {
-            playersPanel.add(new JPanel().add(new UserInfo(user)));
+            UserInfo ui = new UserInfo(user);
+            playersPanel.add(ui);
+            userInfos.add(ui);
+        }
+
+        // Inicjalnie odświeżamy licznik pionków
+        // (np. dla gier wczytanych z pliku może się różnić od 4)
+        for (int i = 0; i < users.size(); i++) {
+            Player p = (Player) users.get(i);
+            userInfos.get(i).setPawnsCount(p.getPawnsRemaining());
         }
 
         //Kostka
@@ -51,7 +66,6 @@ public class GameFrame implements PanelsInterface {
                 System.err.println("Invalid dice value " + diceValue);
                 return;
             }
-            //diceclickability(false);
             String imagePath = "data/images/diceImages/" + diceValue + ".png";
             diceButton.setIcon(new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
         });
@@ -71,6 +85,15 @@ public class GameFrame implements PanelsInterface {
                 parentFrame.repaint();
             }
         });
+    }
+
+    // Metoda pozwalająca w dowolnym momencie odświeżyć liczbę pionków wyświetlaną dla danego gracza
+    public void updatePlayerPawnsCount(Player player) {
+        // Szukamy indexu obiektu Player w naszej liście users (tam są oryginalne obiekty typu Player/Bot)
+        int index = users.indexOf(player);
+        if (index != -1) {
+            userInfos.get(index).setPawnsCount(player.getPawnsRemaining());
+        }
     }
 
     public void diceclickability(boolean clickable) {
@@ -116,120 +139,124 @@ public class GameFrame implements PanelsInterface {
     }
 
     private void plansza(){
-            // Główny panel planszy
-            boardPanel = new JPanel();
-            boardPanel.setLayout(new BorderLayout());
-            // Panel dla środkowej części planszy (główne pole gry)
+        // Główny panel planszy
+        boardPanel = new JPanel();
+        boardPanel.setLayout(new BorderLayout());
 
-            JPanel mainBoardPanel = new JPanel(new GridLayout(13, 13));
-            mainBoardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            // Tworzenie pól planszy
-            for (int row = 0; row < 13; row++) {
-                for (int col = 0; col < 13; col++) {
-                    JPanel field = new JPanel();
-                    field.setOpaque(true); // Umożliwia ustawienie koloru
-                    //kolorowanko
-                    switch (row) {
-                        case 0:
-                        case 12: {
-                            if (col >= 0 && col <= 4) {
-                                field.setBackground(row == 0 ? Color.GREEN : Color.RED);
-                            } else if (col >= 8 && col <= 12) {
-                                field.setBackground(row == 0 ? Color.YELLOW : Color.BLUE);
-                            } else {
-                                field.setBackground(Color.LIGHT_GRAY);
-                            }
+        // Panel dla środkowej części planszy (główne pole gry)
+        JPanel mainBoardPanel = new JPanel(new GridLayout(13, 13));
+        mainBoardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        // Tworzenie pól planszy
+        for (int row = 0; row < 13; row++) {
+            for (int col = 0; col < 13; col++) {
+                JPanel field = new JPanel();
+                field.setOpaque(true);
+
+                switch (row) {
+                    case 0:
+                    case 12: {
+                        if (col >= 0 && col <= 4) {
+                            field.setBackground(row == 0 ? Color.GREEN : Color.RED);
+                        } else if (col >= 8 && col <= 12) {
+                            field.setBackground(row == 0 ? Color.YELLOW : Color.BLUE);
+                        } else {
+                            field.setBackground(Color.LIGHT_GRAY);
                         }
-                        break;
-                        case 1:
-                        case 11:
-                        case 2:
-                        case 3:
-                        case 9:
-                        case 10: {
-                            if ((col >= 1 && col <= 3) || (col >= 9 && col <= 11)) {
-                                field.setBackground(Color.WHITE);
-                            } else if (col == 5 || col == 7) {
-                                field.setBackground(Color.LIGHT_GRAY);
-                            } else {
-                                if (col == 6) {
-                                    field.setBackground(row >= 1 && row <= 3 ? Color.YELLOW : Color.RED);
-                                } else if (col == 0 || col == 4) {
-                                    field.setBackground(row >= 1 && row <= 3 ? Color.GREEN : Color.RED);
-                                } else {
-                                    field.setBackground(row >= 1 && row <= 3 ? Color.YELLOW : Color.BLUE);
-                                }
-                            }
-                            if ((row == 1 && col == 7) || (row == 11 && col == 5)) {
-                                field.setBackground(col == 7 ? Color.YELLOW : Color.RED);
-                            }
-                        }
-                        break;
-                        case 4:
-                        case 8: {
-                            if (col == 5 || col == 7) {
-                                field.setBackground(Color.LIGHT_GRAY);
-                            } else {
-                                if (col == 6) {
-                                    field.setBackground(row == 4 ? Color.YELLOW : Color.RED);
-                                } else if (col >= 0 && col <= 4) {
-                                    field.setBackground(row == 4 ? Color.GREEN : Color.RED);
-                                } else {
-                                    field.setBackground(row == 4 ? Color.YELLOW : Color.BLUE);
-                                }
-                            }
-                        }
-                        break;
-                        case 5:
-                            if (col == 6) {
-                                field.setBackground(Color.YELLOW);
-                            } else if (col == 1) {
-                                field.setBackground(Color.GREEN);
-                            } else {
-                                field.setBackground(Color.LIGHT_GRAY);
-                            }
-                            break;
-                        case 6:
-                            if (col == 0 || col == 12) {
-                                field.setBackground(Color.LIGHT_GRAY);
-                            } else if (col == 6) {
-                                field.setBackground(Color.BLACK);
-                            } else {
-                                field.setBackground((col >= 1 && col <= 5) ? Color.GREEN : Color.BLUE);
-                            }
-                            break;
-                        case 7:
-                            if (col == 6) {
-                                field.setBackground(Color.RED);
-                            } else if (col == 11) {
-                                field.setBackground(Color.BLUE);
-                            } else {
-                                field.setBackground(Color.LIGHT_GRAY);
-                            }
-                            break;
                     }
-                    this.board[row][col] = field;
-                    field.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                    mainBoardPanel.add(field);
+                    break;
+                    case 1:
+                    case 11:
+                    case 2:
+                    case 3:
+                    case 9:
+                    case 10: {
+                        if ((col >= 1 && col <= 3) || (col >= 9 && col <= 11)) {
+                            field.setBackground(Color.WHITE);
+                        } else if (col == 5 || col == 7) {
+                            field.setBackground(Color.LIGHT_GRAY);
+                        } else {
+                            if (col == 6) {
+                                field.setBackground(row >= 1 && row <= 3 ? Color.YELLOW : Color.RED);
+                            } else if (col == 0 || col == 4) {
+                                field.setBackground(row >= 1 && row <= 3 ? Color.GREEN : Color.RED);
+                            } else {
+                                field.setBackground(row >= 1 && row <= 3 ? Color.YELLOW : Color.BLUE);
+                            }
+                        }
+                        if ((row == 1 && col == 7) || (row == 11 && col == 5)) {
+                            field.setBackground(col == 7 ? Color.YELLOW : Color.RED);
+                        }
+                    }
+                    break;
+                    case 4:
+                    case 8: {
+                        if (col == 5 || col == 7) {
+                            field.setBackground(Color.LIGHT_GRAY);
+                        } else {
+                            if (col == 6) {
+                                field.setBackground(row == 4 ? Color.YELLOW : Color.RED);
+                            } else if (col >= 0 && col <= 4) {
+                                field.setBackground(row == 4 ? Color.GREEN : Color.RED);
+                            } else {
+                                field.setBackground(row == 4 ? Color.YELLOW : Color.BLUE);
+                            }
+                        }
+                    }
+                    break;
+                    case 5:
+                        if (col == 6) {
+                            field.setBackground(Color.YELLOW);
+                        } else if (col == 1) {
+                            field.setBackground(Color.GREEN);
+                        } else {
+                            field.setBackground(Color.LIGHT_GRAY);
+                        }
+                        break;
+                    case 6:
+                        if (col == 0 || col == 12) {
+                            field.setBackground(Color.LIGHT_GRAY);
+                        } else if (col == 6) {
+                            field.setBackground(Color.BLACK);
+                        } else {
+                            field.setBackground((col >= 1 && col <= 5) ? Color.GREEN : Color.BLUE);
+                        }
+                        break;
+                    case 7:
+                        if (col == 6) {
+                            field.setBackground(Color.RED);
+                        } else if (col == 11) {
+                            field.setBackground(Color.BLUE);
+                        } else {
+                            field.setBackground(Color.LIGHT_GRAY);
+                        }
+                        break;
                 }
+                this.board[row][col] = field;
+                field.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                mainBoardPanel.add(field);
             }
-            boardPanel.add(mainBoardPanel, BorderLayout.CENTER);
+        }
+        boardPanel.add(mainBoardPanel, BorderLayout.CENTER);
     }
+
     public JPanel getMainPanel() {
         return mainPanel;
     }
+
     public void setPawn(Pawn pawn) {
         Point p = pawn.getCurrentPosition();
         board[p.x][p.y].add(pawn.getPawnComponent());
     }
+
     public void removePawn(Pawn pawn) {
         Point p = pawn.getCurrentPosition();
         board[p.x][p.y].remove(pawn.getPawnComponent());
 
         board[p.x][p.y].revalidate();
         board[p.x][p.y].repaint();
-
     }
+
     public void movePawn(Pawn pawn, Point newPosition) {
         removePawn(pawn);
         pawn.setCurrentPosition(newPosition);

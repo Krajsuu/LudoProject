@@ -10,34 +10,34 @@ public class Player extends User implements Serializable {
 
     private List<Pawn> playerPawns;
     private List<Pawn> pawnsAtBase; // pionki w bazie
-    private List<Pawn> pawnsInGame; // Pionki na planszy
+    private List<Pawn> pawnsInGame; // pionki na planszy
     private List<Pawn> pawnsAtHome; // pionki w domku
-    private transient Pawn currentPawn; // obecny pionek w grze (transient, bo może być null)
+    private transient Pawn currentPawn;
     private boolean hasExtraRoll;
     private boolean hasTurn;
+
+    // NOWOŚĆ: flaga informująca, czy gracz ukończył już grę
+    private boolean finished = false;
 
     public Player(String username, Color color) {
         super(username, color);
         this.pawnsAtBase = new ArrayList<>();
         this.pawnsInGame = new ArrayList<>();
         this.pawnsAtHome = new ArrayList<>();
-
         this.hasExtraRoll = false;
         this.currentPawn = null;
         this.hasTurn = false;
         this.playerPawns = new ArrayList<>();
     }
 
-    // Konstruktor bezargumentowy wymagany do deserializacji
     public Player() {
-        super("", Color.BLACK); // Domyślne wartości
+        super("", Color.BLACK);
         this.pawnsAtBase = new ArrayList<>();
         this.pawnsInGame = new ArrayList<>();
         this.pawnsAtHome = new ArrayList<>();
         this.hasExtraRoll = false;
         this.currentPawn = null;
     }
-
 
     public void setPlayerPawns(List<Pawn> playerPawns) {
         this.playerPawns = playerPawns;
@@ -46,6 +46,7 @@ public class Player extends User implements Serializable {
     public List<Pawn> getPlayerPawns() {
         return playerPawns;
     }
+
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
         out.defaultWriteObject();
         out.writeObject(currentPawn != null ? pawnsInGame.indexOf(currentPawn) : -1);
@@ -109,9 +110,7 @@ public class Player extends User implements Serializable {
     }
 
     public void setCurrentPawn(Pawn pawn) {
-
         this.currentPawn = pawn;
-
     }
 
     public void grantExtraRoll() {
@@ -133,11 +132,26 @@ public class Player extends User implements Serializable {
     public boolean DoesHaveTurn(){
         return hasTurn;
     }
-    //peak nazewnictwo
+
     public void GiveTurn(){
         hasTurn = true;
     }
+
     public void NotGiveTurn(){
         hasTurn = false;
+    }
+
+    // Liczba pionków jeszcze niewprowadzonych do mety
+    public int getPawnsRemaining() {
+        return pawnsAtBase.size() + pawnsInGame.size();
+    }
+
+    // NOWOŚĆ: Zakończył rozgrywkę?
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }
