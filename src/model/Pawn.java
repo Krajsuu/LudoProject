@@ -21,20 +21,29 @@ public class Pawn implements Serializable {
     private ArrayList<Point> walkTable;
     private PawnComponent pawnComponent;
     private int walkTableIndex;
+    private boolean isFirstMove = true;
 
-    public Pawn(Player owner, Point homePosition,Point startPosition,ArrayList<Point> walkTable, ImageIcon icon) {
+    public Pawn(Player owner, Point homePosition, Point startPosition, ArrayList<Point> walkTable, ImageIcon icon) {
         this.owner = owner;
         this.homePosition = homePosition;
         this.startPosition = startPosition;
-        this.goalPosition = goalPosition;
+        rotateStartPosition(); // Rotacja startowej pozycji
         this.walkTable = walkTable;
         this.pawnIcon = icon;
         this.currentPosition = homePosition;
         this.isFinished = false;
         this.pawnComponent = new PawnComponent(this);
         this.walkTableIndex = 0;
-
     }
+
+    public boolean isFirstMove() {
+        return isFirstMove;
+    }
+
+    public void setFirstMove(boolean firstMove) {
+        this.isFirstMove = firstMove;
+    }
+
 
     public String getType() {
         return owner.getColor() + " Pawn";
@@ -51,9 +60,6 @@ public class Pawn implements Serializable {
     public Point getCurrentPosition() {
         return currentPosition;
     }
-
-
-
 
     public void setCurrentPosition(Point position) {
         this.currentPosition = position;
@@ -108,12 +114,17 @@ public class Pawn implements Serializable {
     public int getWalkTableIndex(){
         return this.walkTableIndex;
     }
+
     public void increaseWalkTableIndex(int rollValue){
         this.walkTableIndex = this.walkTableIndex + rollValue;
         if(this.walkTableIndex >= this.walkTable.size()){
             this.walkTableIndex = this.walkTableIndex - rollValue;
         }
     }
+    public void rotateStartPosition() {
+        this.startPosition = new Point(startPosition.y, 12 - startPosition.x);
+    }
+
 
     public ArrayList<Point> getWalkTable(){
         return this.walkTable;
