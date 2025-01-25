@@ -69,6 +69,10 @@ public class Pawn implements Serializable {
         return startPosition;
     }
 
+    public Point getHomePosition() {
+        return homePosition;
+    }
+
     public boolean isAtHome() {
         return currentPosition.equals(homePosition);
     }

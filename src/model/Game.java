@@ -329,8 +329,16 @@ public class Game implements Serializable {
             int diceRollValue = rollDice();
             String imagePath = "data/images/diceImages/" + diceRollValue + ".png";
             gameFrame.setDiceButtonImage(imagePath);
-            bot.setCurrentPawn(bot.choosePawnToMove(diceRollValue));
-            thisTurn(diceRollValue);
+
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                bot.setCurrentPawn(bot.choosePawnToMove(diceRollValue));
+                thisTurn(diceRollValue);
+            });
 
         }
     }
@@ -415,6 +423,17 @@ public class Game implements Serializable {
                     currentPawn.getStartPosition().y,
                     12 - currentPawn.getStartPosition().x
             );
+            //Sprawdzam czy na tej pozycji jest jakiśpionek
+            for (Player player : players) {
+                for (Pawn pawn : player.getPawnsInGame()) {
+                    if (pawn.getCurrentPosition().equals(rotatedStartPosition) && !pawn.getOwner().equals(currentPawn.getOwner())) {
+                        player.movePawnToBase(pawn);
+                        gameFrame.movePawn(pawn, pawn.getHomePosition());
+                        System.out.println("Pionek gracza " + player.getUsername() + " wrócił do bazy");
+                        break;
+                    }
+                }
+            }
             gameFrame.movePawn(currentPawn, rotatedStartPosition);
             currentPawn.setCurrentPosition(rotatedStartPosition);
             currentPlayer.movePawnToGame(currentPawn);
@@ -429,11 +448,23 @@ public class Game implements Serializable {
             }
             currentPawn.increaseWalkTableIndex(totalSteps);
 
+            Point newPosition = currentPawn.getWalkTable().get(currentPawn.getWalkTableIndex());
+
+            //Sprawdzam czy na tej pozycji jest jakiśpionek
+            for (Player player : players) {
+                for (Pawn pawn : player.getPawnsInGame()) {
+                    if (pawn.getCurrentPosition().equals(newPosition) && !pawn.getOwner().equals(currentPawn.getOwner())) {
+                        player.movePawnToBase(pawn);
+                        gameFrame.movePawn(pawn, pawn.getHomePosition());
+                        System.out.println("Pionek gracza " + player.getUsername() + " wrócił do bazy");
+                        break;
+                    }
+                }
+            }
+
             // Ustawiamy pionek na nowe pole
-            gameFrame.movePawn(
-                    currentPawn,
-                    currentPawn.getWalkTable().get(currentPawn.getWalkTableIndex())
-            );
+            gameFrame.movePawn(currentPawn, newPosition);
+            currentPawn.setCurrentPosition(newPosition);
 
             // Sprawdzamy, czy wszedł na pole (6,6) => meta
             if (currentPawn.getCurrentPosition().equals(new Point(6,6))) {
