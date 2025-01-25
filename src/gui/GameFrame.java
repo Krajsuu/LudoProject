@@ -87,6 +87,10 @@ public class GameFrame implements PanelsInterface {
         });
     }
 
+    public void setDiceButtonImage(String imagePath){
+        diceButton.setIcon(new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
+    }
+
     // Metoda pozwalająca w dowolnym momencie odświeżyć liczbę pionków wyświetlaną dla danego gracza
     public void updatePlayerPawnsCount(Player player) {
         // Szukamy indexu obiektu Player w naszej liście users (tam są oryginalne obiekty typu Player/Bot)

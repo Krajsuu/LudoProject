@@ -319,6 +319,22 @@ public class Game implements Serializable {
         // gameFrame.returnToMenu();  (w zależności co mamy w GameFrame)
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void handleBotTurn() {
+        if (currentPlayer.getUserType().equals("Bot")) {
+            Bot bot = (Bot) currentPlayer;
+            int diceRollValue = rollDice();
+            String imagePath = "data/images/diceImages/" + diceRollValue + ".png";
+            gameFrame.setDiceButtonImage(imagePath);
+            bot.setCurrentPawn(bot.choosePawnToMove(diceRollValue));
+            thisTurn(diceRollValue);
+
+        }
+    }
+
     /**
      * Przechodzimy do kolejnego gracza (pomijając tych, którzy skończyli).
      * Jeżeli wszyscy już skończyli, wywołujemy showFinalRankingAndEnd().
@@ -360,6 +376,10 @@ public class Game implements Serializable {
         // Jeśli w tym momencie (teoretycznie) wszyscy skończyli, wyświetlamy ranking
         if (allPlayersFinished()) {
             showFinalRankingAndEnd();
+        }
+
+        if(currentPlayer.getUserType().equals("Bot")) {
+            handleBotTurn();
         }
     }
 

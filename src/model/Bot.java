@@ -20,17 +20,16 @@ public class Bot extends Player implements Serializable {
         this.random = new Random();
     }
 
-    public Pawn choosePawnToMove(int steps) {
+    public Pawn choosePawnToMove(int diceValue) {
         List<Pawn> pawnsInGame = getPawnsInGame();
+        List<Pawn> pawnsInBase = getPawnsAtBase();
+
+        if(diceValue == 6 && !pawnsInBase.isEmpty()){
+            return pawnsInBase.get(0);
+            }
 
         if (pawnsInGame.isEmpty()) {
-            return null;
-        }
-
-        for (Pawn pawn : pawnsInGame) {
-            if (canReachGoal(pawn, steps)) {
-                return pawn;
-            }
+            return pawnsInBase.get(0);
         }
 
         return pawnsInGame.get(random.nextInt(pawnsInGame.size()));
