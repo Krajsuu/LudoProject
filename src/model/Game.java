@@ -326,19 +326,21 @@ public class Game implements Serializable {
     public void handleBotTurn() {
         if (currentPlayer.getUserType().equals("Bot")) {
             Bot bot = (Bot) currentPlayer;
-            int diceRollValue = rollDice();
-            String imagePath = "data/images/diceImages/" + diceRollValue + ".png";
-            gameFrame.setDiceButtonImage(imagePath);
-            gameFrame.setDiceValue(diceRollValue);
+
 
             SwingUtilities.invokeLater(() -> {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
-                bot.setCurrentPawn(bot.choosePawnToMove(diceRollValue));
-                thisTurn(diceRollValue);
+                bot.setCurrentPawn(bot.choosePawnToMove(dice.getValue()));
+                thisTurn(dice.getValue());
+
+                int diceRollValue = rollDice();
+                String imagePath = "data/images/diceImages/" + diceRollValue + ".png";
+                gameFrame.setDiceButtonImage(imagePath);
+                gameFrame.setDiceValue(diceRollValue);
             });
 
         }
@@ -349,45 +351,51 @@ public class Game implements Serializable {
      * Jeżeli wszyscy już skończyli, wywołujemy showFinalRankingAndEnd().
      */
     public void nextTurn() {
-        // Odebranie tury obecnemu graczowi
-        int currentPlayerIndex = players.indexOf(currentPlayer);
-        currentPlayer.NotGiveTurn();
+        if(!currentPlayer.hasExtraRoll()) {
+            // Odebranie tury obecnemu graczowi
+            int currentPlayerIndex = players.indexOf(currentPlayer);
+            currentPlayer.NotGiveTurn();
 
-        // Szukamy kolejnego, który nie jest finished
-        int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
+            // Szukamy kolejnego, który nie jest finished
+            int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
 
-        // Pętlą omijamy graczy, którzy skończyli
-        while (players.get(nextPlayerIndex).isFinished()) {
-            // Jeśli wszyscy - kończymy
+            // Pętlą omijamy graczy, którzy skończyli
+            while (players.get(nextPlayerIndex).isFinished()) {
+                // Jeśli wszyscy - kończymy
+                if (allPlayersFinished()) {
+                    showFinalRankingAndEnd();
+                    return;
+                }
+                nextPlayerIndex = (nextPlayerIndex + 1) % players.size();
+            }
+
+            currentPlayer = players.get(nextPlayerIndex);
+            currentPlayer.GiveTurn();
+
+            // Dla pewności wyłączamy klikalność u wszystkich,
+            // a włączamy tylko u nowego currentPlayer
+            for (Player p : players) {
+                for (Pawn pawn : p.getPlayerPawns()) {
+                    pawn.getPawnComponent().makeClickable(false);
+                }
+            }
+            for (Pawn pawn : currentPlayer.getPlayerPawns()) {
+                pawn.getPawnComponent().makeClickable(true);
+            }
+
+            gameFrame.diceclickability(true);
+
+            // Jeśli w tym momencie (teoretycznie) wszyscy skończyli, wyświetlamy ranking
             if (allPlayersFinished()) {
                 showFinalRankingAndEnd();
-                return;
             }
-            nextPlayerIndex = (nextPlayerIndex + 1) % players.size();
+
         }
-
-        currentPlayer = players.get(nextPlayerIndex);
-        currentPlayer.GiveTurn();
-
-        // Dla pewności wyłączamy klikalność u wszystkich,
-        // a włączamy tylko u nowego currentPlayer
-        for (Player p : players) {
-            for (Pawn pawn : p.getPlayerPawns()) {
-                pawn.getPawnComponent().makeClickable(false);
-            }
+        else {
+            currentPlayer.useExtraRoll();
+            gameFrame.diceclickability(true);
         }
-        for (Pawn pawn : currentPlayer.getPlayerPawns()) {
-            pawn.getPawnComponent().makeClickable(true);
-        }
-
-        gameFrame.diceclickability(true);
-
-        // Jeśli w tym momencie (teoretycznie) wszyscy skończyli, wyświetlamy ranking
-        if (allPlayersFinished()) {
-            showFinalRankingAndEnd();
-        }
-
-        if(currentPlayer.getUserType().equals("Bot")) {
+        if (currentPlayer.getUserType().equals("Bot")) {
             handleBotTurn();
         }
     }
@@ -401,6 +409,9 @@ public class Game implements Serializable {
      */
     public void thisTurn(int diceRollValue) {
         // Jeśli aktualny gracz już jest finished, to nic nie robi i przechodzi kolejka:
+        if(diceRollValue == 6){
+            currentPlayer.grantExtraRoll();
+        }
         if (currentPlayer.isFinished()) {
             nextTurn();
             return;
