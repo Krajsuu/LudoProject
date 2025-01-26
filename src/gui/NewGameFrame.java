@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import model.Logs;
 
 /**
  * Klasa NewGameFrame odpowiada za wyświetlenie okna do rozpoczęcia nowej gry.
@@ -74,6 +75,7 @@ public class NewGameFrame implements PanelsInterface {
     private JFrame parentFrame;
 
     public NewGameFrame(JFrame parentFrame) {
+        Logs.writeLog("NewGameFrame started");
         this.parentFrame = parentFrame;
 
         HumanPlayerComboBox.setModel(new DefaultComboBoxModel(new String[]{"0", "1", "2", "3", "4"}));
@@ -83,6 +85,7 @@ public class NewGameFrame implements PanelsInterface {
         BotPlayerComboBox.addActionListener(e -> updatePlayersFields());
 
         backButton.addActionListener(e -> {
+            Logs.writeLog("Back to MenuFrame from NewGameFrame");
             parentFrame.setContentPane(((MenuFrame) parentFrame).getOriginalPanel());
             parentFrame.revalidate();
             parentFrame.repaint();
@@ -90,6 +93,7 @@ public class NewGameFrame implements PanelsInterface {
 
         startGameButton.addActionListener(e -> {
             if (users.size() < 4) {
+                Logs.writeLog("ERROR! - Not enough players to start the game");
                 JOptionPane.showMessageDialog(null,
                         "Za mało graczy! W grze musi być dokładnie 4 graczy (łącznie boty i ludzie).",
                         "Błąd",
@@ -120,6 +124,7 @@ public class NewGameFrame implements PanelsInterface {
                 }
             }
 
+            Logs.writeLog("Loading GameFrame");
             // Wszystkie warunki spełnione, można rozpocząć grę
             GameFrame gameFrame = new GameFrame(parentFrame, users);
             parentFrame.setContentPane(gameFrame.getMainPanel());

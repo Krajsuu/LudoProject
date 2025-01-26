@@ -10,7 +10,7 @@ import model.Player;
 import model.User;
 import components.UserInfo;
 import interfaces.PanelsInterface;
-
+import model.Logs;
 public class GameFrame implements PanelsInterface {
     private JPanel mainPanel;
     private JPanel playersPanel;
@@ -30,6 +30,7 @@ public class GameFrame implements PanelsInterface {
     private ArrayList<UserInfo> userInfos;
 
     public GameFrame(JFrame parentFrame, ArrayList<User> users) {
+        Logs.writeLog("GameFrame created");
         this.parentFrame = parentFrame;
         this.users = users;
         this.game = new Game(users, this);
@@ -45,23 +46,23 @@ public class GameFrame implements PanelsInterface {
             playersPanel.add(ui);
             userInfos.add(ui);
         }
-
+        Logs.writeLog("UserInfos created");
         // Inicjalnie odświeżamy licznik pionków
         // (np. dla gier wczytanych z pliku może się różnić od 4)
         for (int i = 0; i < users.size(); i++) {
             Player p = (Player) users.get(i);
             userInfos.get(i).setPawnsCount(p.getPawnsRemaining());
         }
-
+        Logs.writeLog("Pawns count updated");
         //Kostka
         diceButton.setText("");
         diceButton.setIcon(new ImageIcon(new ImageIcon("data/images/diceImages/1.png")
                 .getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
 
         diceButton.addActionListener(e -> {
-            game.thisTurn(this.diceValue);
-            this.diceValue = game.rollDice();
 
+            this.diceValue = game.rollDice();
+            game.thisTurn(this.diceValue);
             if (diceValue < 1 || diceValue > 6) {
                 System.err.println("Invalid dice value " + diceValue);
                 return;
@@ -80,6 +81,7 @@ public class GameFrame implements PanelsInterface {
                     JOptionPane.YES_NO_OPTION);
 
             if (response == JOptionPane.YES_OPTION) {
+                Logs.writeLog("Exiting game to main menu");
                 parentFrame.setContentPane(((MenuFrame) parentFrame).getOriginalPanel());
                 parentFrame.revalidate();
                 parentFrame.repaint();
@@ -115,17 +117,21 @@ public class GameFrame implements PanelsInterface {
                 JOptionPane.YES_NO_OPTION);
 
         if (response == JOptionPane.YES_OPTION) {
+            Logs.writeLog("Saving game state");
             String saveName = JOptionPane.showInputDialog("Podaj nazwę zapisu:");
             if (saveName == null || saveName.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nazwa zapisu nie może być pusta.", "Błąd", JOptionPane.ERROR_MESSAGE);
+                Logs.writeLog("ERROR - Save name cannot be empty");
                 return;
             }
 
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("saves/" + saveName + ".ser"))) {
                 oos.writeObject(game);
                 JOptionPane.showMessageDialog(null, "Stan gry zapisany pomyślnie.", "Sukces", JOptionPane.INFORMATION_MESSAGE);
+                Logs.writeLog("Game state saved successfully");
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Błąd zapisu gry: " + ex.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE);
+                Logs.writeLog("Error saving game state: " + ex.getMessage());
             }
         }
     }
@@ -140,6 +146,7 @@ public class GameFrame implements PanelsInterface {
         SaveButton = new JButton("Save Game");
         quitButton = new JButton("BACK TO MAIN MENU");
         diceButton = new JButton();
+        Logs.writeLog("UI components created");
     }
 
     private void plansza(){
@@ -265,6 +272,8 @@ public class GameFrame implements PanelsInterface {
         removePawn(pawn);
         pawn.setCurrentPosition(newPosition);
         setPawn(pawn);
+        board[ newPosition.x][ newPosition.y].revalidate();
+        board[ newPosition.x][ newPosition.y].repaint();
     }
 
     public void updateDicePanelColor(Player player){

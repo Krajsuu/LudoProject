@@ -3,7 +3,7 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
+import model.Logs;
 public class MenuFrame extends JFrame{
     private JPanel JPanel1;
     private JLabel LabelLudoGame;
@@ -15,6 +15,7 @@ public class MenuFrame extends JFrame{
     private JPanel originalPanel;
 
     public MenuFrame() {
+        Logs.writeLog("MenuFrame started");
         setTitle("Ludo Game");
         ImageIcon icon = new ImageIcon("data/images/LudoGameIcon.png");
         ImageIcon LudoGameIcon = new ImageIcon(icon.getImage().getScaledInstance(330, 110, Image.SCALE_SMOOTH));
@@ -32,6 +33,8 @@ public class MenuFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals("exit")) {
+                    Logs.writeLog("Program closed");
+                    Logs.closeLog();
                     System.exit(0);
                 }
             }
@@ -56,6 +59,15 @@ public class MenuFrame extends JFrame{
                     setContentPane(newGameFrame.getMainPanel());
                     revalidate();
                 }
+            }
+        });
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Logs.writeLog("Program closed");
+                Logs.closeLog();
+                System.exit(0);
             }
         });
 

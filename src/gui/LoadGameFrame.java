@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import java.util.ArrayList;
 import model.Game;
-
+import model.Logs;
 public class LoadGameFrame {
     private JPanel LoadGamePanel;
     private JButton LoadButton;
@@ -16,20 +16,24 @@ public class LoadGameFrame {
     private JFrame parentFrame;
 
     public LoadGameFrame(JFrame parentFrame) {
+        Logs.writeLog("LoadGameFrame started");
         this.parentFrame = parentFrame;
 
         updateGameList();
 
         BackButton.addActionListener(e -> {
+            Logs.writeLog("Back to menu from LoadGameFrame");
             parentFrame.setContentPane(((MenuFrame) parentFrame).getOriginalPanel());
             parentFrame.revalidate();
             parentFrame.repaint();
         });
 
         LoadButton.addActionListener(e -> loadSelectedGame());
+
     }
 
     private void updateGameList() {
+        Logs.writeLog("Updating game list");
         File saveDirectory = new File("saves");
         if (!saveDirectory.exists() || !saveDirectory.isDirectory()) {
             saveDirectory.mkdir();
