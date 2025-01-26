@@ -89,6 +89,10 @@ public class GameFrame implements PanelsInterface {
         });
     }
 
+    public void setDiceValue(int value){
+        this.diceValue = value;
+    }
+
     public void setDiceButtonImage(String imagePath){
         diceButton.setIcon(new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
     }

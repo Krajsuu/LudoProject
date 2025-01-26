@@ -329,6 +329,7 @@ public class Game implements Serializable {
             int diceRollValue = rollDice();
             String imagePath = "data/images/diceImages/" + diceRollValue + ".png";
             gameFrame.setDiceButtonImage(imagePath);
+            gameFrame.setDiceValue(diceRollValue);
 
             SwingUtilities.invokeLater(() -> {
                 try {
