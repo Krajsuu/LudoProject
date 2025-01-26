@@ -1,3 +1,4 @@
+// Bot.java
 package model;
 
 import java.awt.Color;
@@ -5,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-public class Bot extends Player implements Serializable {
+public class Bot extends Player implements Serializable { // Implementacja Serializable
     private static final long serialVersionUID = 1L;
     private transient Random random;
 
@@ -26,7 +27,7 @@ public class Bot extends Player implements Serializable {
 
         if(diceValue == 6 && !pawnsInBase.isEmpty()){
             return pawnsInBase.get(0);
-            }
+        }
 
         if (pawnsInGame.isEmpty()) {
             return pawnsInBase.get(0);

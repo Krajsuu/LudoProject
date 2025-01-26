@@ -1,3 +1,4 @@
+// Field.java
 package model;
 
 import java.awt.Point;
@@ -6,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Field implements Serializable {
+public class Field implements Serializable { // Implementacja Serializable
     private static final long serialVersionUID = 1L; // Wersja serializacji
 
     private static final int TOTAL_CELLS = 52; // Liczba pól na głównej ścieżce

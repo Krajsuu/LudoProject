@@ -1,0 +1,4 @@
+2025-01-26 16:20:37 - Program started
+2025-01-26 16:20:37 - MenuFrame started
+2025-01-26 16:20:39 - NewGameFrame started
+2025-01-26 16:20:46 - Program closed

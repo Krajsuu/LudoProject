@@ -1,0 +1,9 @@
+2025-01-26 16:11:03 - Program started
+2025-01-26 16:11:03 - MenuFrame started
+2025-01-26 16:11:09 - NewGameFrame started
+2025-01-26 16:11:14 - Loading GameFrame
+2025-01-26 16:11:14 - UI components created
+2025-01-26 16:11:14 - GameFrame created
+2025-01-26 16:11:14 - UserInfos created
+2025-01-26 16:11:14 - Pawns count updated
+2025-01-26 16:16:11 - Program closed

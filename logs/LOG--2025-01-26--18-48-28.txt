@@ -1,0 +1,3 @@
+2025-01-26 18:48:28 - Program started
+2025-01-26 18:48:29 - MenuFrame started
+2025-01-26 18:48:33 - Program closed

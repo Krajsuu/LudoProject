@@ -1,0 +1,18 @@
+2025-01-26 18:49:08 - Program started
+2025-01-26 18:49:09 - MenuFrame started
+2025-01-26 18:49:16 - NewGameFrame started
+2025-01-26 18:49:23 - Loading GameFrame
+2025-01-26 18:49:23 - UI components created
+2025-01-26 18:49:23 - GameFrame created
+2025-01-26 18:49:23 - UserInfos created
+2025-01-26 18:49:23 - Pawns count updated
+2025-01-26 18:49:47 - Saving game state
+2025-01-26 18:49:51 - Game state saved successfully
+2025-01-26 18:49:55 - Exiting game to main menu
+2025-01-26 18:49:56 - LoadGameFrame started
+2025-01-26 18:49:56 - Updating game list
+2025-01-26 18:49:58 - UI components created
+2025-01-26 18:49:58 - GameFrame created
+2025-01-26 18:49:58 - UserInfos created
+2025-01-26 18:49:58 - Pawns count updated
+2025-01-26 18:50:17 - Program closed

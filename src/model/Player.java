@@ -1,3 +1,4 @@
+// Player.java
 package model;
 
 import java.io.Serializable;
@@ -5,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.Color;
 
-public class Player extends User implements Serializable {
+public class Player extends User implements Serializable { // Dziedziczenie po Serializable
     private static final long serialVersionUID = 1L;
 
     private List<Pawn> playerPawns;
@@ -19,6 +20,7 @@ public class Player extends User implements Serializable {
     // NOWOŚĆ: flaga informująca, czy gracz ukończył już grę
     private boolean finished = false;
 
+    // Konstruktor z argumentami
     public Player(String username, Color color) {
         super(username, color);
         this.pawnsAtBase = new ArrayList<>();
@@ -30,13 +32,16 @@ public class Player extends User implements Serializable {
         this.playerPawns = new ArrayList<>();
     }
 
+    // Konstruktor bezargumentowy
     public Player() {
-        super("", Color.BLACK);
+        super(); // Wywołuje konstruktor bezargumentowy klasy User
         this.pawnsAtBase = new ArrayList<>();
         this.pawnsInGame = new ArrayList<>();
         this.pawnsAtHome = new ArrayList<>();
         this.hasExtraRoll = false;
         this.currentPawn = null;
+        this.hasTurn = false;
+        this.playerPawns = new ArrayList<>();
     }
 
     public void setPlayerPawns(List<Pawn> playerPawns) {

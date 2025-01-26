@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.io.IOException;
 import components.PawnComponent;
 
-public class Pawn implements Serializable {
+public class Pawn implements Serializable { // Implementacja Serializable
     private static final long serialVersionUID = 1L;
 
     private Player owner;
@@ -19,7 +19,7 @@ public class Pawn implements Serializable {
     private transient ImageIcon pawnIcon;
     private boolean isFinished;
     private ArrayList<Point> walkTable;
-    private PawnComponent pawnComponent;
+    private transient PawnComponent pawnComponent; // Oznaczone jako transient
     private int walkTableIndex;
     private boolean isFirstMove = true;
 
@@ -43,7 +43,6 @@ public class Pawn implements Serializable {
     public void setFirstMove(boolean firstMove) {
         this.isFirstMove = firstMove;
     }
-
 
     public String getType() {
         return owner.getColor() + " Pawn";
@@ -86,7 +85,7 @@ public class Pawn implements Serializable {
     }
 
     public void move(int steps) {
-
+        // Implementacja ruchu pionka
     }
 
     public void returnToBase() {
@@ -110,11 +109,13 @@ public class Pawn implements Serializable {
         in.defaultReadObject();
         String iconPath = (String) in.readObject();
         this.pawnIcon = iconPath != null ? new ImageIcon(iconPath) : null;
+        this.pawnComponent = new PawnComponent(this); // Inicjalizacja PawnComponent po deserializacji
     }
 
     public PawnComponent getPawnComponent() {
         return pawnComponent;
     }
+
     public int getWalkTableIndex(){
         return this.walkTableIndex;
     }
@@ -125,10 +126,10 @@ public class Pawn implements Serializable {
             this.walkTableIndex = this.walkTableIndex - rollValue;
         }
     }
+
     public void rotateStartPosition() {
         this.startPosition = new Point(startPosition.y, 12 - startPosition.x);
     }
-
 
     public ArrayList<Point> getWalkTable(){
         return this.walkTable;

@@ -1,7 +1,10 @@
+// PawnComponent.java
 package components;
 
 import javax.swing.*;
 import model.Pawn;
+
+
 public class PawnComponent extends JButton {
     private Pawn pawn;
     private boolean selected;
@@ -19,7 +22,6 @@ public class PawnComponent extends JButton {
             pawn.getOwner().setCurrentPawn(pawn);
             System.out.println("PawnComponent clicked");
         });
-
     }
 
     public void makeClickable(boolean clickable) {
@@ -33,6 +35,4 @@ public class PawnComponent extends JButton {
     public boolean isSelected() {
         return selected;
     }
-
-
 }

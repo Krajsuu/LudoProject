@@ -1,15 +1,17 @@
+// Dice.java
 package model;
 
 import java.io.Serializable;
 import java.util.Random;
 
-public class Dice implements Serializable {
+public class Dice implements Serializable { // Implementacja Serializable
     private static final long serialVersionUID = 1L; // Wersja serializacji
 
     private int randomValue; // Aktualna wartość wyrzucona na kostce
     private transient Random random; // Generator liczb losowych (transient - nie jest serializowalny)
     private static final String IMAGE_PATH = "data/images/diceImages/"; // Stała ścieżka do obrazów kostki
     private boolean isRolled ;
+
     // Konstruktor
     public Dice() {
         this.randomValue = 0;

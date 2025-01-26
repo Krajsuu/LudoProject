@@ -15,7 +15,7 @@ public class Game implements Serializable {
 
     private ArrayList<Player> players; // Gracze w grze
     private Dice dice;
-    private GameFrame gameFrame;
+    private transient GameFrame gameFrame; // Oznaczone jako transient
     private Player currentPlayer;
 
     // Pionki poszczególnych kolorów (niektóre logiki mogą z nich korzystać):
@@ -37,7 +37,7 @@ public class Game implements Serializable {
     private ArrayList<Player> finishingOrder = new ArrayList<>();
 
     /**
-     * Konstruktor: przyjmuje listę `users` (Player/Bot) oraz odwołanie do GameFrame,
+     * Konstruktor: przyjmuje listę users (Player/Bot) oraz odwołanie do GameFrame,
      * buduje wszystkie pionki itp.
      */
     public Game(ArrayList<User> users, GameFrame gameFrame) {
@@ -51,7 +51,7 @@ public class Game implements Serializable {
         this.yellowPawns = new ArrayList<>();
         this.greenPawns = new ArrayList<>();
 
-        // Zapisujemy graczy (przyjmujemy, że w `users` są obiekty typu Player/Bot)
+        // Zapisujemy graczy (przyjmujemy, że w users są obiekty typu Player/Bot)
         for (User user : users) {
             this.players.add((Player) user);
         }
@@ -283,7 +283,7 @@ public class Game implements Serializable {
     }
 
     /**
-     * Sprawdza, czy wszyscy gracze skończyli (czyli `isFinished() == true`).
+     * Sprawdza, czy wszyscy gracze skończyli (czyli isFinished() == true).
      */
     private boolean allPlayersFinished() {
         for (Player p : players) {
@@ -295,7 +295,7 @@ public class Game implements Serializable {
     }
 
     /**
-     * Wyświetla finalny ranking w postaci kolejności w `finishingOrder`.
+     * Wyświetla finalny ranking w postaci kolejności w finishingOrder.
      * Gdy gra się kończy (wszyscy gracze finished), pokazujemy zbiorczy komunikat.
      */
     private void showFinalRankingAndEnd() {
